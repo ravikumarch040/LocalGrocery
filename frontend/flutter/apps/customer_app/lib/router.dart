@@ -6,7 +6,17 @@ import 'screens/auth/login_screen.dart';
 import 'screens/auth/otp_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/cart/cart_screen.dart';
+import 'screens/checkout/checkout_screen.dart';
+import 'screens/address/address_list_screen.dart';
+import 'screens/address/add_address_screen.dart';
+import 'screens/orders/orders_screen.dart';
+import 'screens/orders/order_details_screen.dart';
+import 'screens/orders/order_tracking_screen.dart';
+import 'screens/orders/rate_order_screen.dart';
 import 'screens/placeholder_screens.dart';
+import 'screens/profile/profile_screen.dart';
+import 'screens/profile/settings_screen.dart';
+import 'screens/profile/wallet_screen.dart';
 import 'screens/search/search_screen.dart';
 import 'providers/auth_provider.dart';
 
@@ -105,8 +115,30 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: '/orders/:id/track',
+        builder: (context, state) {
+          final orderId = state.pathParameters['id']!;
+          return OrderTrackingScreen(orderId: orderId);
+        },
+      ),
+      GoRoute(
+        path: '/orders/:id/rate',
+        builder: (context, state) {
+          final orderId = state.pathParameters['id']!;
+          return RateOrderScreen(orderId: orderId);
+        },
+      ),
+      GoRoute(
         path: '/profile',
         builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: '/profile/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/profile/wallet',
+        builder: (context, state) => const WalletScreen(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
