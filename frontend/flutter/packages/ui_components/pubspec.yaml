@@ -1,0 +1,22 @@
+name: ui_components
+description: Shared UI components for LocalGrocery apps
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Local packages
+  core:
+    path: ../core
+  models:
+    path: ../models
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

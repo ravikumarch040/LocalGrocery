@@ -1,0 +1,366 @@
+openapi: 3.0.3
+info:
+  title: Local Grocery Marketplace API
+  description: API specification for hyperlocal grocery marketplace (India)
+  version: 1.0.0
+servers:
+  - url: https://api.yourdomain.com/v1
+    description: Production
+  - url: https://staging-api.yourdomain.com/v1
+    description: Staging
+
+tags:
+  - name: Auth
+  - name: Customer
+  - name: Retailer
+  - name: Catalog
+  - name: Cart
+  - name: Order
+  - name: Payment
+  - name: Delivery
+  - name: Wallet
+  - name: Admin
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        phone:
+          type: string
+        role:
+          type: string
+          enum: [CUSTOMER, RETAILER, DRIVER, ADMIN]
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+        imageUrl:
+          type: string
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+            - PLACED
+            - CONFIRMED
+            - PACKED
+            - OUT_FOR_DELIVERY
+            - DELIVERED
+            - CANCELLED
+        totalAmount:
+          type: number
+
+security:
+  - BearerAuth: []
+
+paths:
+
+  ## AUTH
+  /auth/otp/send:
+    post:
+      tags: [Auth]
+      summary: Send OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+      responses:
+        '200':
+          description: OTP sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /auth/otp/verify:
+    post:
+      tags: [Auth]
+      summary: Verify OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                otp:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+
+  ## CUSTOMER
+  /customers/profile:
+    get:
+      tags: [Customer]
+      summary: Get customer profile
+      responses:
+        '200':
+          description: Profile fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      tags: [Customer]
+      summary: Update customer profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Profile updated
+
+  ## RETAILER
+  /retailers/register:
+    post:
+      tags: [Retailer]
+      summary: Register retailer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                businessName:
+                  type: string
+                gstNumber:
+                  type: string
+      responses:
+        '201':
+          description: Retailer registered
+
+  /stores:
+    post:
+      tags: [Retailer]
+      summary: Create store
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+      responses:
+        '201':
+          description: Store created
+
+  ## CATALOG
+  /catalog/products:
+    get:
+      tags: [Catalog]
+      summary: List products
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Products list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+
+  /catalog/products/{id}:
+    get:
+      tags: [Catalog]
+      summary: Product details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+  ## CART
+  /cart:
+    get:
+      tags: [Cart]
+      summary: Get cart
+      responses:
+        '200':
+          description: Cart fetched
+
+  /cart/add:
+    post:
+      tags: [Cart]
+      summary: Add item to cart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productId:
+                  type: string
+                quantity:
+                  type: integer
+      responses:
+        '200':
+          description: Added to cart
+
+  ## ORDER
+  /orders:
+    post:
+      tags: [Order]
+      summary: Place order
+      responses:
+        '201':
+          description: Order placed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /orders/{id}:
+    get:
+      tags: [Order]
+      summary: Get order details
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  ## PAYMENT
+  /payments/initiate:
+    post:
+      tags: [Payment]
+      summary: Initiate payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderId:
+                  type: string
+                method:
+                  type: string
+                  enum: [UPI, CARD, WALLET, BNPL]
+      responses:
+        '200':
+          description: Payment initiated
+
+  ## DELIVERY
+  /delivery/track/{orderId}:
+    get:
+      tags: [Delivery]
+      summary: Track delivery
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delivery status
+
+  ## WALLET
+  /wallet:
+    get:
+      tags: [Wallet]
+      summary: Get wallet balance
+      responses:
+        '200':
+          description: Wallet details
+
+  /wallet/redeem:
+    post:
+      tags: [Wallet]
+      summary: Redeem wallet points
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+      responses:
+        '200':
+          description: Wallet redeemed
+
+  ## ADMIN
+  /admin/retailers:
+    get:
+      tags: [Admin]
+      summary: List retailers
+      responses:
+        '200':
+          description: Retailer list

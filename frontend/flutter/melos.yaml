@@ -1,0 +1,41 @@
+name: localgrocery_workspace
+repository: https://github.com/localgrocery/mobile-apps
+
+packages:
+  - apps/**
+  - packages/**
+
+command:
+  bootstrap:
+    runPubGetInParallel: true
+    
+  clean:
+    hooks:
+      pre: echo "Cleaning workspace..."
+      
+scripts:
+  analyze:
+    run: flutter analyze
+    exec:
+      concurrency: 1
+      
+  format:
+    run: flutter format .
+    exec:
+      concurrency: 1
+      
+  test:
+    run: flutter test
+    exec:
+      concurrency: 1
+      failFast: true
+      
+  build:runner:
+    run: flutter pub run build_runner build --delete-conflicting-outputs
+    exec:
+      concurrency: 1
+      
+  build:runner:watch:
+    run: flutter pub run build_runner watch --delete-conflicting-outputs
+    exec:
+      concurrency: 1

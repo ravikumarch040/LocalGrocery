@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # PostgreSQL - Primary database for all data
+  postgres:
+    image: postgres:15-alpine
+    container_name: localgrocery-postgres
+    environment:
+      POSTGRES_DB: localgrocery
+      POSTGRES_USER: localgrocery
+      POSTGRES_PASSWORD: dev_password_change_in_prod
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U localgrocery"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - localgrocery-network
+
+  # PgBouncer - Connection pooler for PostgreSQL
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    container_name: localgrocery-pgbouncer
+    environment:
+      DATABASE_URL: "postgres://localgrocery:dev_password_change_in_prod@postgres:5432/localgrocery"
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 1000
+      DEFAULT_POOL_SIZE: 25
+    ports:
+      - "6432:5432"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - localgrocery-network
+
+  # Redis - Cache, sessions, and cart storage
+  redis:
+    image: redis:7-alpine
+    container_name: localgrocery-redis
+    command: redis-server --requirepass dev_password_change_in_prod --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - localgrocery-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  localgrocery-network:
+    driver: bridge

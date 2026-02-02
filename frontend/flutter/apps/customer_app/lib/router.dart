@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'screens/splash/splash_screen.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/auth/otp_screen.dart';
+import 'screens/home/home_screen.dart';
+import 'screens/placeholder_screens.dart';
+import 'providers/auth_provider.dart';
+
+/// Router configuration
+final routerProvider = Provider<GoRouter>((ref) {
+  final authState = ref.watch(authProvider);
+
+  return GoRouter(
+    initialLocation: '/home', // Skip auth, go directly to home
+    redirect: (context, state) {
+      // Disable authentication for development
+      // TODO: Re-enable authentication before production
+      return null;
+      
+      /* Original auth logic (commented out for development):
+      final isLoggedIn = authState.value != null;
+      final isLoggingIn = state.matchedLocation == '/login' || 
+                          state.matchedLocation == '/otp';
+      final isSplash = state.matchedLocation == '/';
+
+      // Allow splash screen
+      if (isSplash) return null;
+
+      // If not logged in and not on login/otp, redirect to login
+      if (!isLoggedIn && !isLoggingIn) {
+        return '/login';
+      }
+
+      // If logged in and on login/otp, redirect to home
+      if (isLoggedIn && isLoggingIn) {
+        return '/home';
+      }
+
+      return null;
+      */
+    },
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/otp',
+        builder: (context, state) {
+          final phoneNumber = state.uri.queryParameters['phone'] ?? '';
+          return OTPScreen(phoneNumber: phoneNumber);
+        },
+      ),
+      GoRoute(
+        path: '/home',
+        builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/product/:id',
+        builder: (context, state) {
+          final productId = state.pathParameters['id']!;
+          return ProductDetailsScreen(productId: productId);
+        },
+      ),
+      GoRoute(
+        path: '/cart',
+        builder: (context, state) => const CartScreen(),
+      ),
+      GoRoute(
+        path: '/checkout',
+        builder: (context, state) => const CheckoutScreen(),
+      ),
+      GoRoute(
+        path: '/orders',
+        builder: (context, state) => const OrdersScreen(),
+      ),
+      GoRoute(
+        path: '/orders/:id',
+        builder: (context, state) {
+          final orderId = state.pathParameters['id']!;
+          return OrderDetailsScreen(orderId: orderId);
+        },
+      ),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
+    ],
+    errorBuilder: (context, state) => Scaffold(
+      body: Center(
+        child: Text('Page not found: ${state.uri.path}'),
+      ),
+    ),
+  );
+});

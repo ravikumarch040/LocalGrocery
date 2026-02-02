@@ -1,0 +1,280 @@
+{
+  "services": [
+    {
+      "id": "auth",
+      "name": "Auth Service",
+      "description": "Authentication & Authorization (JWT + OTP)",
+      "port": 8001,
+      "path": "auth_service",
+      "health_endpoint": "/health",
+      "status": "pending",
+      "has_unit_tests": false,
+      "has_integration_tests": false,
+      "test_status": {
+        "unit": {
+          "passed": 0,
+          "total": 0,
+          "status": "pending"
+        },
+        "integration": {
+          "passed": 0,
+          "total": 0,
+          "status": "pending"
+        }
+      },
+      "priority": "P0",
+      "notes": "Foundational service - blocks all others",
+      "dependencies": []
+    },
+    {
+      "id": "cart",
+      "name": "Cart Service",
+      "description": "Shopping cart management (multi-store)",
+      "port": 8005,
+      "path": "cart_service",
+      "health_endpoint": "/health",
+      "status": "pending",
+      "has_unit_tests": false,
+      "has_integration_tests": false,
+      "test_status": {
+        "unit": {
+          "passed": 0,
+          "total": 0,
+          "status": "pending"
+        },
+        "integration": {
+          "passed": 0,
+          "total": 0,
+          "status": "pending"
+        }
+      },
+      "priority": "P1",
+      "notes": "Core commerce flow",
+      "dependencies": ["catalog", "inventory"]
+    },
+    {
+      "id": "catalog",
+      "name": "Catalog Service",
+      "description": "Store & product metadata management",
+      "port": 8002,
+      "path": "catalog_service",
+      "health_endpoint": "/v1/health",
+      "status": "running",
+      "has_unit_tests": false,
+      "has_integration_tests": true,
+      "test_status": {
+        "unit": {
+          "passed": 0,
+          "total": 0,
+          "status": "n/a"
+        },
+        "integration": {
+          "passed": 5,
+          "total": 5,
+          "status": "passing"
+        }
+      },
+      "priority": "P0",
+      "notes": "Data layer - product & store info",
+      "dependencies": []
+    },
+    {
+      "id": "delivery",
+      "name": "Delivery Service",
+      "description": "Route optimization & driver assignment",
+      "port": 8007,
+      "path": "delivery_service",
+      "health_endpoint": "/health",
+      "status": "pending",
+      "has_unit_tests": false,
+      "has_integration_tests": false,
+      "test_status": {
+        "unit": {
+          "passed": 0,
+          "total": 0,
+          "status": "pending"
+        },
+        "integration": {
+          "passed": 0,
+          "total": 0,
+          "status": "pending"
+        }
+      },
+      "priority": "P1",
+      "notes": "Order fulfillment & tracking",
+      "dependencies": ["order", "notification"]
+    },
+    {
+      "id": "inventory",
+      "name": "Inventory Service",
+      "description": "Stock management & reservation handling",
+      "port": 8004,
+      "path": "inventory_service",
+      "health_endpoint": "/health",
+      "status": "running",
+      "has_unit_tests": true,
+      "has_integration_tests": true,
+      "test_status": {
+        "unit": {
+          "passed": 18,
+          "total": 18,
+          "status": "passing"
+        },
+        "integration": {
+          "passed": 8,
+          "total": 8,
+          "status": "passing"
+        }
+      },
+      "priority": "P0",
+      "notes": "Production ready - fully tested",
+      "dependencies": []
+    },
+    {
+      "id": "notification",
+      "name": "Notification Service",
+      "description": "Push/SMS/Email notifications",
+      "port": 8008,
+      "path": "notification_service",
+      "health_endpoint": "/health",
+      "status": "pending",
+      "has_unit_tests": false,
+      "has_integration_tests": false,
+      "test_status": {
+        "unit": {
+          "passed": 0,
+          "total": 0,
+          "status": "pending"
+        },
+        "integration": {
+          "passed": 0,
+          "total": 0,
+          "status": "pending"
+        }
+      },
+      "priority": "P2",
+      "notes": "Cross-cutting concern - used by all services",
+      "dependencies": []
+    },
+    {
+      "id": "order",
+      "name": "Order Service",
+      "description": "Order lifecycle & management",
+      "port": 8003,
+      "path": "order_service",
+      "health_endpoint": "/v1/health",
+      "status": "running",
+      "has_unit_tests": false,
+      "has_integration_tests": true,
+      "test_status": {
+        "unit": {
+          "passed": 0,
+          "total": 0,
+          "status": "n/a"
+        },
+        "integration": {
+          "passed": 9,
+          "total": 9,
+          "status": "passing"
+        }
+      },
+      "priority": "P0",
+      "notes": "Core commerce service",
+      "dependencies": ["cart", "inventory", "payment"]
+    },
+    {
+      "id": "payment",
+      "name": "Payment Service",
+      "description": "Razorpay & Cashfree dual gateway integration",
+      "port": 8006,
+      "path": "payment_service",
+      "health_endpoint": "/health",
+      "status": "running",
+      "has_unit_tests": false,
+      "has_integration_tests": true,
+      "test_status": {
+        "unit": {
+          "passed": 0,
+          "total": 0,
+          "status": "n/a"
+        },
+        "integration": {
+          "passed": 14,
+          "total": 15,
+          "status": "mostly_passing"
+        }
+      },
+      "priority": "P0",
+      "notes": "Critical - 1 test failing, needs fix before production",
+      "dependencies": ["order"]
+    }
+  ],
+  "test_matrix": {
+    "ready": [
+      {
+        "service": "Catalog Service",
+        "status": "✅",
+        "unit": "N/A",
+        "integration": "5/5"
+      },
+      {
+        "service": "Inventory Service",
+        "status": "✅",
+        "unit": "18/18",
+        "integration": "8/8"
+      },
+      {
+        "service": "Order Service",
+        "status": "✅",
+        "unit": "N/A",
+        "integration": "9/9"
+      }
+    ],
+    "in_progress": [
+      {
+        "service": "Payment Service",
+        "status": "⚠️",
+        "unit": "N/A",
+        "integration": "14/15"
+      }
+    ],
+    "pending": [
+      {
+        "service": "Auth Service",
+        "status": "⏳",
+        "unit": "Pending",
+        "integration": "Pending"
+      },
+      {
+        "service": "Cart Service",
+        "status": "⏳",
+        "unit": "Pending",
+        "integration": "Pending"
+      },
+      {
+        "service": "Delivery Service",
+        "status": "⏳",
+        "unit": "Pending",
+        "integration": "Pending"
+      },
+      {
+        "service": "Notification Service",
+        "status": "⏳",
+        "unit": "Pending",
+        "integration": "Pending"
+      }
+    ]
+  },
+  "metrics": {
+    "total_services": 8,
+    "services_ready": 3,
+    "services_in_progress": 1,
+    "services_pending": 4,
+    "total_unit_tests": 18,
+    "total_integration_tests": 32,
+    "unit_tests_passing": 18,
+    "integration_tests_passing": 31,
+    "overall_pass_rate": 96.9,
+    "last_updated": "2026-01-20T02:55:00Z"
+  }
+}

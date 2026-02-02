@@ -1,0 +1,2 @@
+status 200
+{"success":true,"message":"OTP sent successfully to +919876543211"}

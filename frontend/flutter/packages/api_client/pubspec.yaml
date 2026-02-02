@@ -1,0 +1,25 @@
+name: api_client
+description: API client for LocalGrocery backend services
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # HTTP
+  http: ^1.2.0
+  
+  # Local packages
+  core:
+    path: ../core
+  models:
+    path: ../models
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

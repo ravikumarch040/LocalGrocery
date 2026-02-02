@@ -1,0 +1,27 @@
+# Web Framework
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+
+# Database
+sqlalchemy==2.0.37
+asyncpg==0.30.0
+alembic==1.14.1
+
+# Validation & Settings
+pydantic==2.10.6
+pydantic-settings==2.7.1
+
+# Environment
+python-dotenv==1.0.1
+
+# Image Upload (S3)
+boto3==1.35.94
+python-multipart==0.0.20
+
+# Testing
+pytest==8.3.5
+pytest-asyncio==0.25.2
+httpx==0.28.1
+
+# Utilities
+python-dateutil==2.9.0.post0

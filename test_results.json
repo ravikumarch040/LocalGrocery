@@ -1,0 +1,82 @@
+[
+  {
+    "service": "Auth Service",
+    "status": "running",
+    "unit_passed": 0,
+    "unit_total": 0,
+    "integration_passed": 8,
+    "integration_total": 8,
+    "duration": 9.846960067749023,
+    "error_msg": ""
+  },
+  {
+    "service": "Cart Service",
+    "status": "running",
+    "unit_passed": 0,
+    "unit_total": 0,
+    "integration_passed": 12,
+    "integration_total": 12,
+    "duration": 16.331263303756714,
+    "error_msg": ""
+  },
+  {
+    "service": "Catalog Service",
+    "status": "running",
+    "unit_passed": 0,
+    "unit_total": 0,
+    "integration_passed": 0,
+    "integration_total": 0,
+    "duration": 2.760347843170166,
+    "error_msg": ""
+  },
+  {
+    "service": "Delivery Service",
+    "status": "running",
+    "unit_passed": 0,
+    "unit_total": 0,
+    "integration_passed": 6,
+    "integration_total": 10,
+    "duration": 11.934488296508789,
+    "error_msg": ""
+  },
+  {
+    "service": "Inventory Service",
+    "status": "running",
+    "unit_passed": 0,
+    "unit_total": 0,
+    "integration_passed": 200,
+    "integration_total": 200,
+    "duration": 2.638878583908081,
+    "error_msg": ""
+  },
+  {
+    "service": "Notification Service",
+    "status": "running",
+    "unit_passed": 0,
+    "unit_total": 0,
+    "integration_passed": 3,
+    "integration_total": 12,
+    "duration": 10.813987255096436,
+    "error_msg": ""
+  },
+  {
+    "service": "Order Service",
+    "status": "running",
+    "unit_passed": 0,
+    "unit_total": 0,
+    "integration_passed": 201,
+    "integration_total": 601,
+    "duration": 2.7535812854766846,
+    "error_msg": ""
+  },
+  {
+    "service": "Payment Service",
+    "status": "running",
+    "unit_passed": 0,
+    "unit_total": 0,
+    "integration_passed": 9,
+    "integration_total": 10,
+    "duration": 11.282476663589478,
+    "error_msg": ""
+  }
+]
