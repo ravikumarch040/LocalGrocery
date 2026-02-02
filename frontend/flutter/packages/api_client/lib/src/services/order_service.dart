@@ -7,7 +7,7 @@ class OrderService {
 
   OrderService(this._apiClient);
 
-  /// Create new order
+  /// Create new order (BFF-style: address_id + payment_method)
   Future<api.ApiResponse<models.Order>> createOrder({
     required String addressId,
     required String paymentMethod,
@@ -19,6 +19,29 @@ class OrderService {
         'address_id': addressId,
         'payment_method': paymentMethod,
         if (deliveryInstructions != null) 'delivery_instructions': deliveryInstructions,
+      },
+      fromJson: (json) => models.Order.fromJson(json),
+    );
+  }
+
+  /// Create order with full payload (for backends that expect OrderCreate: customer_id, store_id, delivery_address, items)
+  Future<api.ApiResponse<models.Order>> createOrderFromCart({
+    required String customerId,
+    required String storeId,
+    required List<Map<String, dynamic>> items,
+    required Map<String, String> deliveryAddress,
+    required String paymentMethod,
+    String? notes,
+  }) async {
+    return await _apiClient.post(
+      '/orders',
+      body: {
+        'customer_id': customerId,
+        'store_id': storeId,
+        'items': items,
+        'delivery_address': deliveryAddress,
+        'payment_method': paymentMethod,
+        if (notes != null && notes.isNotEmpty) 'notes': notes,
       },
       fromJson: (json) => models.Order.fromJson(json),
     );

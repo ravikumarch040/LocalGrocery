@@ -5,7 +5,9 @@ import 'screens/splash/splash_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/otp_screen.dart';
 import 'screens/home/home_screen.dart';
+import 'screens/cart/cart_screen.dart';
 import 'screens/placeholder_screens.dart';
+import 'screens/search/search_screen.dart';
 import 'providers/auth_provider.dart';
 
 /// Router configuration
@@ -62,6 +64,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const HomeScreen(),
       ),
       GoRoute(
+        path: '/search',
+        builder: (context, state) {
+          final q = state.uri.queryParameters['q'] ?? '';
+          return SearchScreen(initialQuery: q);
+        },
+      ),
+      GoRoute(
         path: '/product/:id',
         builder: (context, state) {
           final productId = state.pathParameters['id']!;
@@ -75,6 +84,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/checkout',
         builder: (context, state) => const CheckoutScreen(),
+      ),
+      GoRoute(
+        path: '/addresses',
+        builder: (context, state) => const AddressListScreen(),
+      ),
+      GoRoute(
+        path: '/addresses/add',
+        builder: (context, state) => const AddAddressScreen(),
       ),
       GoRoute(
         path: '/orders',

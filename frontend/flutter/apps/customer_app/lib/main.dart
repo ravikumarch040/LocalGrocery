@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:core/core.dart';
 import 'router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize AppConfig with environment variables
+  await AppConfig.initialize(environment: 'dev');
+  
   runApp(
     const ProviderScope(
       child: MyApp(),

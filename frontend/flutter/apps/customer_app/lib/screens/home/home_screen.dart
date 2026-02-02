@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:models/models.dart';
 import '../../providers/catalog_provider.dart';
+import '../../providers/cart_provider.dart';
+import '../../providers/location_provider.dart';
+import '../../widgets/category_card.dart';
+import '../../widgets/product_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -11,10 +16,17 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('LocalGrocery'),
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
         elevation: 0,
+        titleSpacing: 0,
+        title: _buildLocationAppBarTitle(context, ref),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart_outlined),
+            onPressed: () => context.push('/cart'),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -24,15 +36,151 @@ class HomeScreen extends ConsumerWidget {
             const SizedBox(height: 16),
 
             // Categories Section
-            _buildCategoriesSection(ref),
+            _buildCategoriesSection(context, ref),
             const SizedBox(height: 24),
 
             // Featured Products Section
-            _buildFeaturedProductsSection(ref),
+            _buildFeaturedProductsSection(context, ref),
             const SizedBox(height: 24),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildLocationAppBarTitle(BuildContext context, WidgetRef ref) {
+    final locationState = ref.watch(userLocationProvider);
+
+    return InkWell(
+      onTap: () => _showLocationSelector(context, ref),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.location_on_outlined, size: 20),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Deliver to',
+                style: TextStyle(fontSize: 11),
+              ),
+              locationState.when(
+                loading: () => const SizedBox(
+                  height: 16,
+                  width: 60,
+                  child: LinearProgressIndicator(
+                    backgroundColor: Colors.white24,
+                  ),
+                ),
+                error: (_, __) => const Text(
+                  'Select location',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                data: (value) => Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        value.displayText,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: 18,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showLocationSelector(BuildContext context, WidgetRef ref) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Select delivery location',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Location selection is not fully wired yet.\n'
+                  'In the next step, this will show saved addresses and current location.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.my_location),
+                    label: const Text('Use current location'),
+                    onPressed: () async {
+                      await ref.read(userLocationProvider.notifier).detectCurrentLocation();
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.add_location_alt_outlined),
+                    label: const Text('Add new address'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      context.push('/addresses/add');
+                    },
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -50,14 +198,19 @@ class HomeScreen extends ConsumerWidget {
           ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
+        textInputAction: TextInputAction.search,
         onSubmitted: (query) {
-          // TODO: Navigate to search results
+          final trimmed = query.trim();
+          if (trimmed.isNotEmpty) {
+            context.push('/search?q=$trimmed');
+          }
         },
+        onTapOutside: (_) => FocusScope.of(context).unfocus(),
       ),
     );
   }
 
-  Widget _buildCategoriesSection(WidgetRef ref) {
+  Widget _buildCategoriesSection(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -65,7 +218,7 @@ class HomeScreen extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Categories',
-            style: Theme.of(ref.context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         const SizedBox(height: 12),
@@ -83,7 +236,12 @@ class HomeScreen extends ConsumerWidget {
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
                   final category = categories[index];
-                  return _buildCategoryCard(category);
+                  return CategoryCard(
+                    category: category,
+                    onTap: () {
+                      // TODO: Navigate to products list for this category
+                    },
+                  );
                 },
               );
             },
@@ -93,53 +251,7 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildCategoryCard(Category category) {
-    return Container(
-      width: 100,
-      margin: const EdgeInsets.only(right: 12),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 100,
-            height: 90,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.grey[200],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: category.iconUrl != null
-                  ? Image.network(
-                      category.iconUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.category),
-                        );
-                      },
-                    )
-                  : Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.category),
-                    ),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            category.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 12),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeaturedProductsSection(WidgetRef ref) {
+  Widget _buildFeaturedProductsSection(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -147,7 +259,7 @@ class HomeScreen extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Featured Products',
-            style: Theme.of(ref.context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         const SizedBox(height: 12),
@@ -170,7 +282,15 @@ class HomeScreen extends ConsumerWidget {
               itemCount: products.length,
               itemBuilder: (context, index) {
                 final product = products[index];
-                return _buildProductCard(product);
+                return ProductCard(
+                  product: product,
+                  onTap: () {
+                    context.push('/product/${product.id}');
+                  },
+                  onAddToCart: () {
+                    _handleAddToCart(context, ref, product);
+                  },
+                );
               },
             );
           },
@@ -179,131 +299,40 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProductCard(Product product) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Product Image
-          Container(
-            height: 120,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-              color: Colors.grey[200],
-            ),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-              child: product.imageUrl != null
-                  ? Image.network(
-                      product.imageUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.image_not_supported),
-                        );
-                      },
-                    )
-                  : Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.image_not_supported),
-                    ),
-            ),
-          ),
-          // Product Info
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    product.unit ?? 'item',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text(
-                        '₹${product.basePrice.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '₹${product.mrp.toStringAsFixed(0)}',
-                        style: TextStyle(
-                          fontSize: 10,
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  // Stock Status
-                  if (!product.inStock)
-                    Text(
-                      'Out of Stock',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.red[400],
-                        fontWeight: FontWeight.w500,
-                      ),
-                    )
-                  else
-                    SizedBox(
-                      width: double.infinity,
-                      height: 24,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // TODO: Add to cart
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          padding: EdgeInsets.zero,
-                        ),
-                        child: const Text(
-                          'Add',
-                          style: TextStyle(fontSize: 11, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ],
+  Future<void> _handleAddToCart(
+    BuildContext context,
+    WidgetRef ref,
+    Product product,
+  ) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    scaffoldMessenger.showSnackBar(
+      const SnackBar(
+        content: Text('Adding to cart...'),
+        duration: Duration(milliseconds: 800),
       ),
     );
+
+    try {
+      // Store grouping will be handled by backend based on product/store mapping.
+      await ref.read(cartProvider.notifier).addItem(
+            productId: product.id,
+            storeId: product.categoryId, // TODO: replace with real storeId when available
+            quantity: 1,
+          );
+
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text('Added to cart'),
+          duration: Duration(milliseconds: 800),
+        ),
+      );
+    } catch (_) {
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text('Failed to add to cart'),
+        ),
+      );
+    }
   }
 }
