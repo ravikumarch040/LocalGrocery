@@ -149,6 +149,29 @@ class ApiClient {
     }
   }
 
+  /// PATCH request
+  Future<ApiResponse<T>> patch<T>(
+    String endpoint, {
+    Map<String, dynamic>? body,
+    Map<String, String>? headers,
+    T Function(dynamic)? fromJson,
+  }) async {
+    try {
+      final uri = Uri.parse('$baseUrl$endpoint');
+      final response = await http
+          .patch(
+            uri,
+            headers: _getHeaders(additionalHeaders: headers),
+            body: body != null ? jsonEncode(body) : null,
+          )
+          .timeout(AppConstants.apiTimeout);
+
+      return _handleResponse(response, fromJson);
+    } catch (e) {
+      return ApiResponse<T>.error(message: _handleException(e));
+    }
+  }
+
   /// DELETE request
   Future<ApiResponse<T>> delete<T>(
     String endpoint, {
