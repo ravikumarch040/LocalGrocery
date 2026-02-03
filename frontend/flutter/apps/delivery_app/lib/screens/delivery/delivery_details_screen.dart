@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:geolocator/geolocator.dart';
 import '../../providers/delivery_provider.dart';
 import '../../providers/partner_provider.dart';
 import '../../providers/api_providers.dart';
@@ -79,6 +81,11 @@ class DeliveryDetailsScreen extends ConsumerWidget {
                   ),
                 const SizedBox(height: 16),
                 OutlinedButton.icon(
+                  onPressed: () => context.push('/delivery/$deliveryId/map'),
+                  icon: const Icon(Icons.map),
+                  label: const Text('Show map'),
+                ),
+                OutlinedButton.icon(
                   onPressed: () => _openMaps(d.deliveryAddress),
                   icon: const Icon(Icons.directions),
                   label: const Text('Open in Maps'),
@@ -110,8 +117,28 @@ class DeliveryDetailsScreen extends ConsumerWidget {
   }
 
   Future<void> _updateStatus(BuildContext context, WidgetRef ref, String status) async {
+    Map<String, dynamic>? location;
+    try {
+      final pos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.medium),
+      );
+      location = {'lat': pos.latitude, 'lng': pos.longitude};
+      final partnerId = await ref.read(deliveryPartnerIdProvider.future);
+      if (partnerId != null) {
+        final service = ref.read(deliveryServiceProvider);
+        await service.updatePartnerLocation(
+          partnerId: partnerId,
+          lat: pos.latitude,
+          lng: pos.longitude,
+        );
+      }
+    } catch (_) {}
     final service = ref.read(deliveryServiceProvider);
-    final res = await service.updateDeliveryStatus(deliveryId: deliveryId, status: status);
+    final res = await service.updateDeliveryStatus(
+      deliveryId: deliveryId,
+      status: status,
+      location: location,
+    );
     if (!context.mounted) return;
     if (res.success) {
       ref.invalidate(deliveryDetailProvider(deliveryId));

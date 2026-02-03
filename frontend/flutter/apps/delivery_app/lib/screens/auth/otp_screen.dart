@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../providers/api_providers.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/partner_provider.dart';
 
@@ -62,7 +63,12 @@ class _OTPScreenState extends ConsumerState<OTPScreen> {
       if (error == null) {
         final user = ref.read(authProvider).value;
         if (user != null) {
-          await setDeliveryPartnerId(user.id);
+          final service = ref.read(deliveryServiceProvider);
+          final meRes = await service.getPartnerMe();
+          final partnerId = (meRes.success && meRes.data != null)
+              ? meRes.data!.id
+              : user.id;
+          await setDeliveryPartnerId(partnerId);
         }
         if (!mounted) return;
         context.go('/home');

@@ -77,6 +77,14 @@ class DeliveryService {
     );
   }
 
+  /// Get current user's delivery partner (GET /v1/partners/me). Returns null on 404/error.
+  Future<api.ApiResponse<DeliveryPartnerDto>> getPartnerMe() async {
+    return await _apiClient.get(
+      '$_partnersPrefix/me',
+      fromJson: (json) => DeliveryPartnerDto.fromJson(json as Map<String, dynamic>),
+    );
+  }
+
   /// Get delivery partner by ID
   Future<api.ApiResponse<DeliveryPartnerDto>> getPartner(String partnerId) async {
     return await _apiClient.get(
@@ -184,6 +192,25 @@ class DeliveryDto {
 
   String get pickupAddress => pickupLocation['address'] as String? ?? 'Pickup';
   String get deliveryAddress => deliveryLocation['address'] as String? ?? 'Delivery';
+
+  static double? _latFrom(Map<String, dynamic> m) {
+    final v = m['lat'] ?? m['latitude'];
+    if (v == null) return null;
+    if (v is num) return v.toDouble();
+    return double.tryParse(v.toString());
+  }
+
+  static double? _lngFrom(Map<String, dynamic> m) {
+    final v = m['lng'] ?? m['longitude'];
+    if (v == null) return null;
+    if (v is num) return v.toDouble();
+    return double.tryParse(v.toString());
+  }
+
+  double? get pickupLat => _latFrom(pickupLocation);
+  double? get pickupLng => _lngFrom(pickupLocation);
+  double? get deliveryLat => _latFrom(deliveryLocation);
+  double? get deliveryLng => _lngFrom(deliveryLocation);
 }
 
 /// Delivery partner DTO

@@ -27,6 +27,10 @@ dependencies:
   intl: ^0.18.1
   url_launcher: ^6.2.2
   http: ^1.2.0
+  mapbox_maps_flutter: ^2.18.0
+  permission_handler: ^11.3.0
+  geolocator: ^13.0.2
+  app_links: ^6.3.2
 
 dev_dependencies:
   flutter_test:

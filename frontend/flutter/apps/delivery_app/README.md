@@ -1,6 +1,22 @@
 # delivery_app
 
-A new Flutter project.
+LocalGrocery Delivery Partner app (Flutter).
+
+## Mapbox (optional)
+
+For the in-app delivery map (Android/iOS), set your Mapbox access token:
+
+- **Option A:** Add to your env file (e.g. `frontend/flutter/.env.dev` or `apps/delivery_app/.env.dev`):
+  ```
+  MAPBOX_ACCESS_TOKEN=your_mapbox_secret_token_here
+  ```
+- **Option B:** Run with dart-define: `flutter run --dart-define=ACCESS_TOKEN=your_token`
+
+## Deep links
+
+Open a delivery by ID from outside the app:
+
+- **Android/iOS:** `localgrocery://delivery/<delivery_id>` (e.g. `localgrocery://delivery/abc-123-uuid`)
 
 ## Getting Started
 

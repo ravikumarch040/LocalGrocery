@@ -1,25 +1,71 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:core/core.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:app_links/app_links.dart';
 import 'router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppConfig.initialize(environment: 'dev');
+  final token = AppConfig.mapboxAccessToken.isNotEmpty
+      ? AppConfig.mapboxAccessToken
+      : String.fromEnvironment('ACCESS_TOKEN', defaultValue: '');
+  if (token.isNotEmpty) {
+    MapboxOptions.setAccessToken(token);
+  }
+
+  // Deep link: open e.g. localgrocery://delivery/123 to go to delivery details
+  final appLinks = AppLinks();
+  Uri? initialUri;
+  try {
+    initialUri = await appLinks.getInitialLink();
+  } catch (_) {}
+  final initialPath = pathFromDeepLinkUri(initialUri);
 
   runApp(
-    const ProviderScope(
-      child: DeliveryApp(),
+    ProviderScope(
+      overrides: [
+        if (initialPath != null) initialDeepLinkPathProvider.overrideWithValue(initialPath),
+      ],
+      child: const DeliveryApp(),
     ),
   );
 }
 
-class DeliveryApp extends ConsumerWidget {
+class DeliveryApp extends ConsumerStatefulWidget {
   const DeliveryApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DeliveryApp> createState() => _DeliveryAppState();
+}
+
+class _DeliveryAppState extends ConsumerState<DeliveryApp> {
+  StreamSubscription<Uri>? _linkSub;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final router = ref.read(routerProvider);
+      _linkSub = AppLinks().uriLinkStream.listen((uri) {
+        final path = pathFromDeepLinkUri(uri);
+        if (path != null) router.go(path);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _linkSub?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
