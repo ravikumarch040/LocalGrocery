@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models/models.dart';
+import 'package:core/core.dart';
 import '../../providers/catalog_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../providers/location_provider.dart';
@@ -231,7 +232,11 @@ class HomeScreen extends ConsumerWidget {
           child: ref.watch(categoriesProvider).when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Center(
-              child: Text('Error: $err'),
+              child: AsyncErrorView(
+                error: err,
+                onRetry: () => ref.invalidate(categoriesProvider),
+                compact: true,
+              ),
             ),
             data: (categories) {
               return ListView.builder(
@@ -270,7 +275,11 @@ class HomeScreen extends ConsumerWidget {
         ref.watch(featuredProductsProvider).when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, stack) => Center(
-            child: Text('Error: $err'),
+            child: AsyncErrorView(
+              error: err,
+              onRetry: () => ref.invalidate(featuredProductsProvider),
+              compact: true,
+            ),
           ),
           data: (products) {
             return GridView.builder(

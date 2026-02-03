@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models/models.dart' as models;
+import 'package:core/core.dart';
 
 import '../../providers/order_provider.dart';
 
@@ -52,18 +53,9 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
       ),
       body: ordersAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Error: $err', textAlign: TextAlign.center),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => ref.invalidate(ordersListProvider),
-                child: const Text('Retry'),
-              ),
-            ],
-          ),
+        error: (err, _) => AsyncErrorView(
+          error: err,
+          onRetry: () => ref.invalidate(ordersListProvider),
         ),
         data: (allOrders) {
           final active = allOrders

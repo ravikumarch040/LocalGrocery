@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models/models.dart' as models;
+import 'package:core/core.dart';
 
 import '../../providers/cart_provider.dart';
 
@@ -21,18 +22,9 @@ class CartScreen extends ConsumerWidget {
       ),
       body: cartAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Error: $err', textAlign: TextAlign.center),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => ref.read(cartProvider.notifier).refresh(),
-                child: const Text('Retry'),
-              ),
-            ],
-          ),
+        error: (err, _) => AsyncErrorView(
+          error: err,
+          onRetry: () => ref.read(cartProvider.notifier).refresh(),
         ),
         data: (cart) {
           if (cart == null || cart.items.isEmpty) {
