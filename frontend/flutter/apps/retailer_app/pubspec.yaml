@@ -42,6 +42,9 @@ dependencies:
   # Image
   image_picker: ^1.0.5
 
+  # Barcode
+  mobile_scanner: ^6.0.2
+
   # HTTP
   http: ^1.2.0
 

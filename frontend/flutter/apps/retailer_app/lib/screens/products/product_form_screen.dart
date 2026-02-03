@@ -27,6 +27,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   final _stockController = TextEditingController();
   final _unitController = TextEditingController();
   final _imageUrlController = TextEditingController();
+  final _barcodeController = TextEditingController();
   bool _isLoading = false;
   bool _isEdit = false;
   String? _categoryId;
@@ -49,6 +50,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     _stockController.dispose();
     _unitController.dispose();
     _imageUrlController.dispose();
+    _barcodeController.dispose();
     super.dispose();
   }
 
@@ -93,6 +95,14 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     final picker = ImagePicker();
     final x = await picker.pickImage(source: ImageSource.gallery, maxWidth: 800, imageQuality: 85);
     if (x != null) setState(() => _pickedImagePath = x.path);
+  }
+
+  Future<void> _scanBarcode() async {
+    final result = await context.push<String>('/inventory/barcode-scan');
+    if (result != null && mounted) {
+      _barcodeController.text = result;
+      setState(() {});
+    }
   }
 
   Future<void> _save() async {
@@ -338,6 +348,28 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                       labelText: 'Unit (e.g. kg, pack)',
                       border: OutlineInputBorder(),
                     ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
+                          controller: _barcodeController,
+                          readOnly: _isEdit,
+                          decoration: const InputDecoration(
+                            labelText: 'Barcode / SKU (optional)',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      IconButton.filled(
+                        onPressed: _isEdit ? null : _scanBarcode,
+                        icon: const Icon(Icons.qr_code_scanner),
+                        tooltip: 'Scan barcode',
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 24),
                   FilledButton(

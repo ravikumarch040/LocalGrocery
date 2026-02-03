@@ -13,6 +13,7 @@ import 'screens/profile/profile_screen.dart';
 import 'screens/orders/order_details_screen.dart';
 import 'screens/products/product_form_screen.dart';
 import 'screens/products/bulk_stock_screen.dart';
+import 'screens/products/barcode_scanner_screen.dart';
 import 'screens/kyc/kyc_status_screen.dart';
 import 'screens/kyc/kyc_onboarding_screen.dart';
 import 'screens/analytics/analytics_screen.dart';
@@ -117,6 +118,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/inventory/bulk',
         builder: (context, state) => const BulkStockScreen(),
+      ),
+      GoRoute(
+        path: '/inventory/barcode-scan',
+        builder: (context, state) => const BarcodeScannerScreen(),
       ),
       GoRoute(
         path: '/kyc',
