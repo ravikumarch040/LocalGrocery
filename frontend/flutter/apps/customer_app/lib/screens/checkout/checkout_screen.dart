@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models/models.dart' as models;
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:core/core.dart';
 
 import '../../providers/address_provider.dart';
 import '../../providers/auth_provider.dart';
@@ -21,11 +23,67 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
   final _instructions = TextEditingController();
   bool _placing = false;
   String? _error;
+  late final Razorpay _razorpay;
+  _PendingOrderPayload? _pendingOrderPayload;
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+  }
 
   @override
   void dispose() {
+    _razorpay.clear();
     _instructions.dispose();
     super.dispose();
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    if (_pendingOrderPayload == null) return;
+    _createOrderAfterPayment();
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    if (!mounted) return;
+    setState(() {
+      _placing = false;
+      _error = response.message ?? 'Payment failed';
+    });
+    _pendingOrderPayload = null;
+  }
+
+  Future<void> _createOrderAfterPayment() async {
+    final payload = _pendingOrderPayload;
+    if (payload == null) return;
+    _pendingOrderPayload = null;
+
+    final orderService = ref.read(orderServiceProvider);
+    final response = await orderService.createOrderFromCart(
+      customerId: payload.customerId,
+      storeId: payload.storeId,
+      items: payload.items,
+      deliveryAddress: payload.deliveryAddress,
+      paymentMethod: 'ONLINE',
+      notes: payload.notes,
+    );
+
+    if (response.success && response.data != null) {
+      await ref.read(cartProvider.notifier).refresh();
+      if (mounted) {
+        setState(() => _placing = false);
+        context.go('/orders/${response.data!.id}');
+      }
+    } else {
+      if (mounted) {
+        setState(() {
+          _placing = false;
+          _error = response.message ?? 'Order creation failed after payment';
+        });
+      }
+    }
   }
 
   Future<void> _placeOrder() async {
@@ -48,36 +106,76 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final user = ref.read(authProvider).value;
     final customerId = user?.id ?? 'guest';
     final orderService = ref.read(orderServiceProvider);
+    final items = cart.items
+        .map((e) => {
+              'product_id': e.productId,
+              'product_name': e.name,
+              'quantity': e.quantity,
+              'unit_price': e.price,
+            })
+        .toList();
+    final storeId = cart.items.first.storeId;
+    final deliveryAddress = {
+      'street': _selectedAddress!.addressLine1,
+      'city': _selectedAddress!.city,
+      'pincode': _selectedAddress!.pinCode,
+    };
+    final notes = _instructions.text.trim().isEmpty ? null : _instructions.text.trim();
 
+    // Online payment: open Razorpay first, create order on success
+    if (_paymentMethod == 'online') {
+      final key = AppConfig.razorpayKeyId;
+      if (key.isEmpty) {
+        setState(() {
+          _placing = false;
+          _error = 'Razorpay not configured. Add RAZORPAY_KEY_ID to .env or use COD.';
+        });
+        return;
+      }
+      _pendingOrderPayload = _PendingOrderPayload(
+        customerId: customerId,
+        storeId: storeId,
+        items: items,
+        deliveryAddress: deliveryAddress,
+        notes: notes,
+      );
+      try {
+        final amountPaise = (cart.total * 100).round();
+        _razorpay.open({
+          'key': key,
+          'amount': amountPaise,
+          'name': 'LocalGrocery',
+          'description': 'Order payment',
+          'prefill': {
+            'contact': user?.phone ?? '',
+            'email': user?.email ?? '',
+          },
+        });
+      } catch (e) {
+        setState(() {
+          _placing = false;
+          _error = e.toString().replaceFirst('Exception: ', '');
+        });
+        _pendingOrderPayload = null;
+      }
+      return;
+    }
+
+    // COD: create order directly
     try {
-      // Try full-order payload (backend OrderCreate)
-      final items = cart.items
-          .map((e) => {
-                'product_id': e.productId,
-                'product_name': e.name,
-                'quantity': e.quantity,
-                'unit_price': e.price,
-              })
-          .toList();
-      final storeId = cart.items.first.storeId;
-      final deliveryAddress = {
-        'street': _selectedAddress!.addressLine1,
-        'city': _selectedAddress!.city,
-        'pincode': _selectedAddress!.pinCode,
-      };
-
       final response = await orderService.createOrderFromCart(
         customerId: customerId,
         storeId: storeId,
         items: items,
         deliveryAddress: deliveryAddress,
-        paymentMethod: _paymentMethod == 'cod' ? 'COD' : 'ONLINE',
-        notes: _instructions.text.trim().isEmpty ? null : _instructions.text.trim(),
+        paymentMethod: 'COD',
+        notes: notes,
       );
 
       if (response.success && response.data != null) {
         await ref.read(cartProvider.notifier).refresh();
         if (mounted) {
+          setState(() => _placing = false);
           context.go('/orders/${response.data!.id}');
         }
       } else {
@@ -293,4 +391,21 @@ class _Row extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Stored when opening Razorpay so we can create order on payment success.
+class _PendingOrderPayload {
+  final String customerId;
+  final String storeId;
+  final List<Map<String, dynamic>> items;
+  final Map<String, dynamic> deliveryAddress;
+  final String? notes;
+
+  _PendingOrderPayload({
+    required this.customerId,
+    required this.storeId,
+    required this.items,
+    required this.deliveryAddress,
+    this.notes,
+  });
 }
