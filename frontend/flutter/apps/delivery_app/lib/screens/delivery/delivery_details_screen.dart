@@ -75,7 +75,7 @@ class DeliveryDetailsScreen extends ConsumerWidget {
                   ),
                 if (canDeliver)
                   FilledButton.icon(
-                    onPressed: () => _updateStatus(context, ref, 'DELIVERED'),
+                    onPressed: () => context.push('/delivery/$deliveryId/proof'),
                     icon: const Icon(Icons.done_all),
                     label: const Text('Mark delivered'),
                   ),

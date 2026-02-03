@@ -8,6 +8,7 @@ import 'screens/auth/otp_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/delivery/delivery_details_screen.dart';
 import 'screens/delivery/delivery_map_screen.dart';
+import 'screens/delivery/proof_of_delivery_screen.dart';
 import 'screens/earnings/earnings_screen.dart';
 import 'screens/profile/profile_screen.dart';
 
@@ -57,6 +58,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) {
               final id = state.pathParameters['id']!;
               return DeliveryMapScreen(deliveryId: id);
+            },
+          ),
+          GoRoute(
+            path: 'proof',
+            builder: (context, state) {
+              final id = state.pathParameters['id']!;
+              return ProofOfDeliveryScreen(deliveryId: id);
             },
           ),
         ],

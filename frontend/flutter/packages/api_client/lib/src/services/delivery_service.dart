@@ -60,11 +60,13 @@ class DeliveryService {
   }
 
   /// Update delivery status (PICKED_UP, IN_TRANSIT, DELIVERED, etc.)
+  /// Optional [proofPhotoBase64] for proof of delivery when status is DELIVERED (backend may store when supported).
   Future<api.ApiResponse<DeliveryDto>> updateDeliveryStatus({
     required String deliveryId,
     required String status,
     Map<String, dynamic>? location,
     String? notes,
+    String? proofPhotoBase64,
   }) async {
     return await _apiClient.patch(
       '$_deliveriesPrefix/$deliveryId/status',
@@ -72,6 +74,7 @@ class DeliveryService {
         'status': status,
         if (location != null) 'location': location,
         if (notes != null) 'notes': notes,
+        if (proofPhotoBase64 != null) 'proof_photo_base64': proofPhotoBase64,
       },
       fromJson: (json) => DeliveryDto.fromJson(json as Map<String, dynamic>),
     );
