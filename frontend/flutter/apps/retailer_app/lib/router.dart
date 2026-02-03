@@ -12,7 +12,10 @@ import 'screens/earnings/earnings_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/orders/order_details_screen.dart';
 import 'screens/products/product_form_screen.dart';
+import 'screens/products/bulk_stock_screen.dart';
 import 'screens/kyc/kyc_status_screen.dart';
+import 'screens/kyc/kyc_onboarding_screen.dart';
+import 'screens/analytics/analytics_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -112,8 +115,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
       GoRoute(
+        path: '/inventory/bulk',
+        builder: (context, state) => const BulkStockScreen(),
+      ),
+      GoRoute(
         path: '/kyc',
         builder: (context, state) => const KycStatusScreen(),
+      ),
+      GoRoute(
+        path: '/kyc/onboarding',
+        builder: (context, state) => const KycOnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/analytics',
+        builder: (context, state) => const AnalyticsScreen(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

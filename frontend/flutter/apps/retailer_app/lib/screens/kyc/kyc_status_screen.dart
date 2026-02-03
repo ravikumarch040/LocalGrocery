@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../providers/store_provider.dart';
 
 class KycStatusScreen extends ConsumerWidget {
@@ -58,14 +59,7 @@ class KycStatusScreen extends ConsumerWidget {
                 const SizedBox(height: 32),
                 if (!isApproved)
                   FilledButton.icon(
-                    onPressed: () {
-                      // TODO: Navigate to KYC form (business info, GST, bank, docs)
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('KYC form coming soon'),
-                        ),
-                      );
-                    },
+                    onPressed: () => context.push('/kyc/onboarding'),
                     icon: const Icon(Icons.upload_file),
                     label: Text(isRejected ? 'Upload missing docs' : 'Complete KYC'),
                   ),

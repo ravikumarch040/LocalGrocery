@@ -13,6 +13,7 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final storeAsync = ref.watch(retailerStoreProvider);
     final newOrdersAsync = ref.watch(retailerOrdersProvider('PLACED'));
+    final analyticsAsync = ref.watch(retailerAnalyticsProvider);
     final auth = ref.watch(authProvider).value;
 
     return Scaffold(
@@ -29,6 +30,8 @@ class DashboardScreen extends ConsumerWidget {
         onRefresh: () async {
           ref.invalidate(retailerStoreProvider);
           ref.invalidate(retailerOrdersProvider);
+          ref.invalidate(retailerOrdersForAnalyticsProvider);
+          ref.invalidate(retailerAnalyticsProvider);
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -52,26 +55,42 @@ class DashboardScreen extends ConsumerWidget {
                 error: (e, st) => const SizedBox.shrink(),
               ),
               const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: _StatCard(
-                      title: "Today's orders",
-                      value: '—',
-                      icon: Icons.shopping_cart,
-                      color: Colors.amber,
+              analyticsAsync.when(
+                data: (a) => Row(
+                  children: [
+                    Expanded(
+                      child: _StatCard(
+                        title: "Today's orders",
+                        value: '${a.todayOrderCount}',
+                        icon: Icons.shopping_cart,
+                        color: Colors.amber,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _StatCard(
-                      title: "Today's revenue",
-                      value: '₹ —',
-                      icon: Icons.currency_rupee,
-                      color: Colors.green,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _StatCard(
+                        title: "Today's revenue",
+                        value: '₹${a.todayRevenue.toStringAsFixed(0)}',
+                        icon: Icons.currency_rupee,
+                        color: Colors.green,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                loading: () => Row(
+                  children: [
+                    Expanded(child: _StatCard(title: "Today's orders", value: '…', icon: Icons.shopping_cart, color: Colors.amber)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _StatCard(title: "Today's revenue", value: '…', icon: Icons.currency_rupee, color: Colors.green)),
+                  ],
+                ),
+                error: (_, __) => Row(
+                  children: [
+                    Expanded(child: _StatCard(title: "Today's orders", value: '—', icon: Icons.shopping_cart, color: Colors.amber)),
+                    const SizedBox(width: 12),
+                    Expanded(child: _StatCard(title: "Today's revenue", value: '₹—', icon: Icons.currency_rupee, color: Colors.green)),
+                  ],
+                ),
               ),
               const SizedBox(height: 12),
               newOrdersAsync.when(
@@ -103,65 +122,27 @@ class DashboardScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              Text(
-                'Sales (last 7 days)',
-                style: Theme.of(context).textTheme.titleMedium,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Sales (last 7 days)',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  TextButton(
+                    onPressed: () => context.push('/analytics'),
+                    child: const Text('View all'),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
-              SizedBox(
-                height: 180,
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.spaceAround,
-                    maxY: 100,
-                    barTouchData: BarTouchData(enabled: false),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          getTitlesWidget: (value, meta) {
-                            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                            final i = value.toInt();
-                            if (i >= 0 && i < days.length) {
-                              return Text(days[i], style: const TextStyle(fontSize: 10));
-                            }
-                            return const Text('');
-                          },
-                          reservedSize: 28,
-                        ),
-                      ),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 32,
-                          getTitlesWidget: (value, meta) => Text(
-                            value.toInt().toString(),
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ),
-                      ),
-                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    ),
-                    gridData: const FlGridData(show: false),
-                    borderData: FlBorderData(show: false),
-                    barGroups: List.generate(7, (i) {
-                      return BarChartGroupData(
-                        x: i,
-                        barRods: [
-                          BarChartRodData(
-                            toY: (i + 1) * 12.0 + 20,
-                            color: Colors.amber.shade400,
-                            width: 16,
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-                          ),
-                        ],
-                        showingTooltipIndicators: [0],
-                      );
-                    }),
-                  ),
+              analyticsAsync.when(
+                data: (a) => SizedBox(
+                  height: 180,
+                  child: _SalesBarChart(series: a.last7Days),
                 ),
+                loading: () => const SizedBox(height: 180, child: Center(child: CircularProgressIndicator())),
+                error: (_, __) => const SizedBox(height: 180, child: Center(child: Text('Could not load chart'))),
               ),
               const SizedBox(height: 24),
               Row(
@@ -229,6 +210,79 @@ class _StatCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _SalesBarChart extends StatelessWidget {
+  final List<({int dayOffset, double revenue})> series;
+
+  const _SalesBarChart({required this.series});
+
+  @override
+  Widget build(BuildContext context) {
+    final maxY = series.isEmpty ? 100.0 : (series.map((e) => e.revenue).reduce((a, b) => a > b ? a : b) * 1.1).clamp(10.0, double.infinity);
+    final now = DateTime.now();
+    final dayLabels = List.generate(7, (i) {
+      final d = now.subtract(Duration(days: 6 - i));
+      const short = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      return '${short[d.weekday - 1]}\n${d.day}';
+    });
+
+    return BarChart(
+      BarChartData(
+        alignment: BarChartAlignment.spaceAround,
+        maxY: maxY,
+        barTouchData: BarTouchData(enabled: false),
+        titlesData: FlTitlesData(
+          show: true,
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                final i = value.toInt();
+                if (i >= 0 && i < dayLabels.length) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(dayLabels[i], style: const TextStyle(fontSize: 9), textAlign: TextAlign.center),
+                  );
+                }
+                return const Text('');
+              },
+              reservedSize: 32,
+            ),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 36,
+              getTitlesWidget: (value, meta) => Text(
+                value.toInt().toString(),
+                style: const TextStyle(fontSize: 10),
+              ),
+            ),
+          ),
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        ),
+        gridData: const FlGridData(show: false),
+        borderData: FlBorderData(show: false),
+        barGroups: List.generate(7, (i) {
+          final rev = i < series.length ? series[i].revenue : 0.0;
+          return BarChartGroupData(
+            x: i,
+            barRods: [
+              BarChartRodData(
+                toY: rev,
+                color: Colors.amber.shade400,
+                width: 16,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+              ),
+            ],
+            showingTooltipIndicators: [0],
+          );
+        }),
       ),
     );
   }

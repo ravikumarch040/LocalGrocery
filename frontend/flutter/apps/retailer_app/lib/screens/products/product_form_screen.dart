@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:models/models.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../providers/api_providers.dart';
 import '../../providers/products_provider.dart';
 import '../../providers/store_provider.dart';
@@ -23,11 +26,14 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   final _priceController = TextEditingController();
   final _stockController = TextEditingController();
   final _unitController = TextEditingController();
+  final _imageUrlController = TextEditingController();
   bool _isLoading = false;
   bool _isEdit = false;
   String? _categoryId;
   List<Category> _categories = [];
   bool _categoriesLoaded = false;
+  String? _pickedImagePath;
+  models.Product? _product; // set in edit mode when loading store product
 
   @override
   void initState() {
@@ -42,6 +48,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     _priceController.dispose();
     _stockController.dispose();
     _unitController.dispose();
+    _imageUrlController.dispose();
     super.dispose();
   }
 
@@ -71,11 +78,21 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
         _nameController.text = p.name;
         _descController.text = p.description ?? '';
         _unitController.text = p.unit ?? '';
+        _imageUrlController.text = p.imageUrl ?? '';
       }
       _priceController.text = (sp.storePrice ?? p?.basePrice ?? 0).toStringAsFixed(0);
       _stockController.text = sp.stockQuantity.toString();
-      setState(() => _categoryId = p?.categoryId);
+      setState(() {
+        _categoryId = p?.categoryId;
+        _product = p;
+      });
     }
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final x = await picker.pickImage(source: ImageSource.gallery, maxWidth: 800, imageQuality: 85);
+    if (x != null) setState(() => _pickedImagePath = x.path);
   }
 
   Future<void> _save() async {
@@ -98,15 +115,23 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
           storePrice: price,
         );
         if (!mounted) return;
-        if (res.success) {
-          ref.invalidate(retailerStoreProductsProvider);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Product updated')),
-          );
-          context.pop();
-        } else {
+        if (!res.success) {
           _showError(res.message ?? 'Update failed');
+          return;
         }
+        final imageUrl = _imageUrlController.text.trim();
+        if (_product != null && imageUrl.isNotEmpty) {
+          await catalog.updateProduct(
+            productId: _product!.id,
+            imageUrl: imageUrl,
+          );
+        }
+        if (!mounted) return;
+        ref.invalidate(retailerStoreProductsProvider);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Product updated')),
+        );
+        context.pop();
       } else {
         final name = _nameController.text.trim();
         final description = _descController.text.trim().isEmpty ? null : _descController.text.trim();
@@ -117,12 +142,14 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
           _showError('Select a category');
           return;
         }
+        final imageUrl = _imageUrlController.text.trim().isEmpty ? null : _imageUrlController.text.trim();
         final createRes = await catalog.createProduct(
           name: name,
           categoryId: _categoryId!,
           basePrice: basePrice,
           description: description,
           unit: unit,
+          imageUrl: imageUrl,
         );
         if (!createRes.success || createRes.data == null) {
           if (mounted) _showError(createRes.message ?? 'Failed to create product');
@@ -156,6 +183,59 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
+
+  Widget _buildImageSection() {
+    final url = _imageUrlController.text.trim();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (_pickedImagePath != null && File(_pickedImagePath!).existsSync())
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.file(
+                File(_pickedImagePath!),
+                height: 120,
+                width: 120,
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+        else if (url.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: CachedNetworkImage(
+              imageUrl: url,
+              height: 120,
+              width: 120,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => const SizedBox(
+                height: 120,
+                width: 120,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              errorWidget: (_, __, ___) => const Icon(Icons.broken_image, size: 48),
+            ),
+          ),
+        TextFormField(
+          controller: _imageUrlController,
+          decoration: const InputDecoration(
+            labelText: 'Image URL (optional)',
+            border: OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.url,
+          onChanged: (_) => setState(() {}),
+        ),
+        const SizedBox(height: 8),
+        OutlinedButton.icon(
+          onPressed: _pickImage,
+          icon: const Icon(Icons.add_photo_alternate),
+          label: const Text('Pick photo from gallery'),
+        ),
+      ],
     );
   }
 
@@ -201,6 +281,8 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                     ),
                     maxLines: 2,
                   ),
+                  const SizedBox(height: 16),
+                  _buildImageSection(),
                   if (!_isEdit) ...[
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(

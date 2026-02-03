@@ -32,7 +32,19 @@ final catalogServiceProvider = Provider<CatalogService>((ref) {
 final orderServiceProvider = Provider<OrderService>((ref) {
   final base = AppConfig.orderServiceUrl.isNotEmpty
       ? AppConfig.orderServiceUrl
-      : 'http://localhost:8003';
+      : AppConfig.apiGatewayUrl.isNotEmpty
+          ? AppConfig.apiGatewayUrl
+          : 'http://localhost:8003';
   final client = ApiClient(baseUrl: base);
   return OrderService(client);
+});
+
+final retailerKycServiceProvider = Provider<RetailerKycService>((ref) {
+  final base = AppConfig.apiGatewayUrl.isNotEmpty
+      ? AppConfig.apiGatewayUrl
+      : AppConfig.orderServiceUrl.isNotEmpty
+          ? AppConfig.orderServiceUrl
+          : 'http://localhost:8001';
+  final client = ApiClient(baseUrl: base);
+  return RetailerKycService(client);
 });

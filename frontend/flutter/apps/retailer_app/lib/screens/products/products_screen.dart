@@ -15,6 +15,11 @@ class ProductsScreen extends ConsumerWidget {
         title: const Text('Inventory'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.edit_note),
+            tooltip: 'Bulk update stock',
+            onPressed: () => context.push('/inventory/bulk'),
+          ),
+          IconButton(
             icon: const Icon(Icons.add),
             onPressed: () => context.push('/inventory/add'),
           ),
