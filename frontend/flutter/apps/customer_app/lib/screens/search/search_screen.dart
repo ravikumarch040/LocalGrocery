@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:models/models.dart';
 
 import '../../providers/catalog_provider.dart';
+import '../../providers/cart_provider.dart';
 import '../../widgets/product_card.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -46,6 +48,29 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         setState(() {});
       }
     });
+  }
+
+  Future<void> _handleAddToCart(BuildContext context, Product product) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    scaffoldMessenger.showSnackBar(
+      const SnackBar(content: Text('Adding to cart...'), duration: Duration(milliseconds: 800)),
+    );
+    try {
+      await ref.read(cartProvider.notifier).addItem(
+            productId: product.id,
+            storeId: product.categoryId,
+            quantity: 1,
+          );
+      if (!context.mounted) return;
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Added to cart'), duration: Duration(milliseconds: 800)),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Failed to add to cart'), backgroundColor: Colors.red),
+      );
+    }
   }
 
   @override
@@ -116,14 +141,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             return ProductCard(
               product: product,
               onTap: () => context.push('/product/${product.id}'),
-              onAddToCart: () {
-                // Reuse home add-to-cart later if needed
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Add to cart from search is not yet implemented'),
-                  ),
-                );
-              },
+              onAddToCart: () => _handleAddToCart(context, product),
             );
           },
         );

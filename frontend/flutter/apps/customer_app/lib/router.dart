@@ -13,7 +13,7 @@ import 'screens/orders/orders_screen.dart';
 import 'screens/orders/order_details_screen.dart';
 import 'screens/orders/order_tracking_screen.dart';
 import 'screens/orders/rate_order_screen.dart';
-import 'screens/placeholder_screens.dart';
+import 'screens/product/product_details_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/profile/settings_screen.dart';
 import 'screens/profile/wallet_screen.dart';
