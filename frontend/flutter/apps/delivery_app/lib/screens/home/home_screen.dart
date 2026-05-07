@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:core/core.dart';
 import '../../providers/partner_provider.dart';
 import '../../providers/delivery_provider.dart';
 import '../../providers/api_providers.dart';
@@ -149,7 +150,10 @@ class _AvailableList extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) => Center(child: Text('Error: $e')),
+      error: (e, st) => AsyncErrorView(
+        error: e,
+        onRetry: () => ref.invalidate(availableDeliveriesProvider),
+      ),
     );
   }
 }
@@ -192,7 +196,10 @@ class _MyDeliveriesList extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, st) => Center(child: Text('Error: $e')),
+      error: (e, st) => AsyncErrorView(
+        error: e,
+        onRetry: () => ref.invalidate(myDeliveriesProvider),
+      ),
     );
   }
 }

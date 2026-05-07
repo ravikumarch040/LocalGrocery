@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:core/core.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mb;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart' as geo;
@@ -118,7 +119,10 @@ class _DeliveryMapScreenState extends ConsumerState<DeliveryMapScreen> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) => Center(child: Text('Error: $e')),
+        error: (e, st) => AsyncErrorView(
+          error: e,
+          onRetry: () => ref.invalidate(deliveryDetailProvider(widget.deliveryId)),
+        ),
       ),
     );
   }

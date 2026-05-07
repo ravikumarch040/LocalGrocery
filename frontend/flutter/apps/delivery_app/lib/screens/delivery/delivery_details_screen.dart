@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:core/core.dart';
 import '../../providers/delivery_provider.dart';
 import '../../providers/partner_provider.dart';
 import '../../providers/api_providers.dart';
@@ -95,7 +96,10 @@ class DeliveryDetailsScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) => Center(child: Text('Error: $e')),
+        error: (e, st) => AsyncErrorView(
+          error: e,
+          onRetry: () => ref.invalidate(deliveryDetailProvider(deliveryId)),
+        ),
       ),
     );
   }

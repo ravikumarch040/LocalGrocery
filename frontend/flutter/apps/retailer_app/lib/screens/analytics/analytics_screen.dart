@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:core/core.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/store_provider.dart';
 
@@ -27,20 +28,9 @@ class AnalyticsScreen extends ConsumerWidget {
       ),
       body: analyticsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Error: $e', textAlign: TextAlign.center),
-              const SizedBox(height: 16),
-              FilledButton(
-                onPressed: () {
-                  ref.invalidate(retailerAnalyticsProvider);
-                },
-                child: const Text('Retry'),
-              ),
-            ],
-          ),
+        error: (e, _) => AsyncErrorView(
+          error: e,
+          onRetry: () => ref.invalidate(retailerAnalyticsProvider),
         ),
         data: (a) => RefreshIndicator(
           onRefresh: () async {

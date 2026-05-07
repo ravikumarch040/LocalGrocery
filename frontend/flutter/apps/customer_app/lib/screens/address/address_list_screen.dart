@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models/models.dart' as models;
+import 'package:core/core.dart';
 
 import '../../providers/address_provider.dart';
 
@@ -26,7 +27,10 @@ class AddressListScreen extends ConsumerWidget {
       ),
       body: addressesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
+        error: (err, _) => AsyncErrorView(
+          error: err,
+          onRetry: () => ref.invalidate(savedAddressesProvider),
+        ),
         data: (addresses) {
           if (addresses.isEmpty) {
             return Center(

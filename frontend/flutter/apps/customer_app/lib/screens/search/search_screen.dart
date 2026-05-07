@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models/models.dart';
+import 'package:core/core.dart';
 
 import '../../providers/catalog_provider.dart';
 import '../../providers/cart_provider.dart';
@@ -113,8 +114,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
     return asyncProducts.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(
-        child: Text('Error: $err'),
+      error: (err, _) => AsyncErrorView(
+        error: err,
+        onRetry: () => ref.invalidate(searchProductsProvider(_query)),
       ),
       data: (products) {
         if (products.isEmpty) {

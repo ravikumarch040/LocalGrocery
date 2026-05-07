@@ -205,7 +205,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
       ),
       body: cartAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
+        error: (err, _) => AsyncErrorView(
+          error: err,
+          onRetry: () => ref.invalidate(cartProvider),
+        ),
         data: (cart) {
           if (cart == null || cart.items.isEmpty) {
             return Center(
@@ -242,7 +245,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                 const SizedBox(height: 8),
                 addressesAsync.when(
                   loading: () => const CircularProgressIndicator(),
-                  error: (e, _) => Text('Error: $e'),
+                  error: (e, _) => AsyncErrorView(
+                    error: e,
+                    compact: true,
+                    onRetry: () => ref.invalidate(savedAddressesProvider),
+                  ),
                   data: (addresses) {
                     if (addresses.isEmpty) {
                       return Card(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:core/core.dart';
 
 import '../../providers/auth_provider.dart';
 
@@ -19,7 +20,10 @@ class ProfileScreen extends ConsumerWidget {
       ),
       body: authAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
+        error: (err, _) => AsyncErrorView(
+          error: err,
+          onRetry: () => ref.invalidate(authProvider),
+        ),
         data: (user) {
           if (user == null) {
             return Center(

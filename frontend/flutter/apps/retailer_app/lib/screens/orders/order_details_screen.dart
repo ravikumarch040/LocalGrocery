@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models/models.dart';
+import 'package:core/core.dart';
 import '../../providers/api_providers.dart';
 import '../../providers/order_provider.dart';
 
@@ -126,7 +127,10 @@ class OrderDetailsScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => AsyncErrorView(
+          error: e,
+          onRetry: () => ref.invalidate(_orderDetailProvider(orderId)),
+        ),
       ),
     );
   }

@@ -10,3 +10,4 @@ export 'src/utils/date_utils.dart';
 export 'src/errors/app_exception.dart';
 export 'src/errors/error_handler.dart';
 export 'src/widgets/async_helpers.dart';
+export 'src/firebase/firebase_init.dart';

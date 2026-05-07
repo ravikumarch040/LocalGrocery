@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:core/core.dart';
 
 import '../../providers/order_provider.dart';
 import '../../providers/api_providers.dart';
@@ -23,7 +24,10 @@ class OrderTrackingScreen extends ConsumerWidget {
       ),
       body: orderAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text('Error: $err')),
+        error: (err, _) => AsyncErrorView(
+          error: err,
+          onRetry: () => ref.invalidate(orderDetailProvider(orderId)),
+        ),
         data: (order) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),

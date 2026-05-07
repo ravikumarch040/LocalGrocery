@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:api_client/api_client.dart';
+import 'package:core/core.dart';
 import '../../providers/api_providers.dart';
 import '../../providers/products_provider.dart';
 
@@ -198,18 +199,9 @@ class _BulkStockScreenState extends ConsumerState<BulkStockScreen> {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, size: 48, color: Colors.red.shade300),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Text('Error: $e', textAlign: TextAlign.center),
-              ),
-            ],
-          ),
+        error: (e, _) => AsyncErrorView(
+          error: e,
+          onRetry: () => ref.invalidate(retailerStoreProductsProvider),
         ),
       ),
     );

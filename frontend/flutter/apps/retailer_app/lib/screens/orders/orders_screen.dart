@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:core/core.dart';
 import '../../providers/order_provider.dart';
 
 class OrdersScreen extends ConsumerStatefulWidget {
@@ -106,15 +107,9 @@ class _OrdersList extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 48, color: Colors.red.shade300),
-            const SizedBox(height: 16),
-            Text('Error: $e', textAlign: TextAlign.center),
-          ],
-        ),
+      error: (e, _) => AsyncErrorView(
+        error: e,
+        onRetry: () => ref.invalidate(retailerOrdersProvider(status)),
       ),
     );
   }

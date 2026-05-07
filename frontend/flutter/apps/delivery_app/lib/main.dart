@@ -1,16 +1,22 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:core/core.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:app_links/app_links.dart';
+import 'firebase_options.dart';
 import 'router.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppConfig.initialize(environment: 'dev');
+
   final token = AppConfig.mapboxAccessToken.isNotEmpty
       ? AppConfig.mapboxAccessToken
       : String.fromEnvironment('ACCESS_TOKEN', defaultValue: '');
@@ -18,7 +24,11 @@ void main() async {
     MapboxOptions.setAccessToken(token);
   }
 
-  // Deep link: open e.g. localgrocery://delivery/123 to go to delivery details
+  try {
+    await FirebaseInit.initializeFirebase(DefaultFirebaseOptions.currentPlatform);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  } catch (_) {}
+
   final appLinks = AppLinks();
   Uri? initialUri;
   try {
@@ -26,13 +36,16 @@ void main() async {
   } catch (_) {}
   final initialPath = pathFromDeepLinkUri(initialUri);
 
-  runApp(
-    ProviderScope(
-      overrides: [
-        if (initialPath != null) initialDeepLinkPathProvider.overrideWithValue(initialPath),
-      ],
-      child: const DeliveryApp(),
+  runZonedGuarded(
+    () => runApp(
+      ProviderScope(
+        overrides: [
+          if (initialPath != null) initialDeepLinkPathProvider.overrideWithValue(initialPath),
+        ],
+        child: const DeliveryApp(),
+      ),
     ),
+    (error, stack) => FirebaseInit.recordError(error, stack),
   );
 }
 

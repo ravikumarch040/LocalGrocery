@@ -47,5 +47,10 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera is used to scan product barcodes.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>
