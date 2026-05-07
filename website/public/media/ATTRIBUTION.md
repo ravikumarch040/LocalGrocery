@@ -1,6 +1,6 @@
 # Media attribution
 
-Royalty-free sources used on the LocalGrocery marketing site. Update contact and repo links in [`website/src/site-config.ts`](../src/site-config.ts) before publishing.
+Royalty-free sources used on the LocalGrocery marketing site. Update contact and repo links in [`website/src/site-config.ts`](../../src/site-config.ts) before publishing.
 
 ## Video
 
@@ -8,15 +8,12 @@ Royalty-free sources used on the LocalGrocery marketing site. Update contact and
 
 ## Photography (Unsplash)
 
-Images are loaded from Unsplash with crop parameters. [Unsplash License](https://unsplash.com/license).
+Images are loaded from `images.unsplash.com` with crop/size query parameters. [Unsplash License](https://unsplash.com/license).
 
-| Approx. use on page | Unsplash photo (id / theme) |
-|--------------------|------------------------------|
-| Hero video poster | `photo-1542838132-92c53300491e` — produce table |
-| Problem cards | `photo-1604719312566`, `photo-1556742049`, `photo-1516738901171` |
-| Personas | `photo-1485908950220`, `photo-1604719312566`, `photo-1526367704774` |
-| Bento / features | `photo-1506368083636`, `photo-1546435770`, `photo-1580913428735` |
-| Order journey | `photo-1588964887859`, `photo-1556740752`, `photo-1610832958506`, `photo-1525160354320`, `photo-1543362906` |
-| Neighborhood block | `photo-1490818387583` |
+**Note:** Only valid photo IDs are used (invalid or removed IDs return **404** and show as broken images in the browser). Replace any image by picking a photo on [unsplash.com](https://unsplash.com) and copying its **Image URL** from the download/share UI.
 
-Replace with your own photography or host downloads under `website/public/media/` if you prefer not to hotlink.
+Current photo ids in use include:
+
+`photo-1542838132-92c53300491e`, `1604719312566-8912e9227c6a`, `1556742049-0cfed4f6a45d`, `1516738901171-8eb4fc13bd20`, `1534723452862-4c874018d66d`, `1558618666-fcd25c85cd64`, `1571771894821-ce9b6c11b08e`, `1546435770-a3e426bf472b`, `1524661135-423995f22d0b` (journey: nearby / map pins), `1556742111-a301076d9d18` (journey: secure payment), `1464226184884-fa280b87c399`, `1512941937669-90a1b58e7e9c` (journey: map & live tracking), `1504674900247-0877df9cc836`, `1490818387583-1baba5e638af`.
+
+To avoid hotlinking entirely, download JPEGs from Unsplash and place them under `website/public/media/`, then point `src` to `./media/your-file.jpg` (paths stay relative to the deployed site root).
