@@ -2,6 +2,10 @@
 
 A multi-vendor grocery marketplace empowering local retailers (kirana stores) in India through mobile-first architecture with three Flutter apps connecting to microservices backend.
 
+URL  - https://ravikumarch040.github.io/LocalGrocery/
+
+WIKI - https://github.com/ravikumarch040/LocalGrocery/wiki
+
 ## 🎯 Project Overview
 
 **Mission**: Enable local retailers to sell online competitively while delivering fast, trusted grocery experiences to customers in Tier-2/3 Indian cities.
