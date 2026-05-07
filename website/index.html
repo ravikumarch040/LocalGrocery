@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%2327684d'/%3E%3Cpath fill='%23fdfbf7' d='M9 20c2-6 5-10 8-10s5 3 7 9l-2 1c-1-5-3-8-5-8s-4 3-6 9l-2-1Z'/%3E%3C/svg%3E" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="LocalGrocery — a neighborhood-first grocery platform connecting customers, local stores, and delivery partners with fast, trusted shopping experiences."
+    />
+    <title>LocalGrocery — Neighborhood grocery, made simple</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-cream-50 bg-grain">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-leaf-700 focus:px-4 focus:py-2 focus:text-white"
+      >Skip to content</a
+    >
+
+    <header
+      class="fixed inset-x-0 top-0 z-50 border-b border-leaf-200/50 bg-cream-50/80 backdrop-blur-md transition-[box-shadow,background-color] duration-300"
+      data-header
+    >
+      <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="#" class="flex items-center gap-2" data-smooth>
+          <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-leaf-600 text-sm font-bold text-white shadow-soft font-display">LG</span>
+          <span class="font-display text-lg font-semibold text-ink">LocalGrocery</span>
+        </a>
+        <nav class="hidden items-center gap-8 text-sm font-medium text-ink/80 md:flex" aria-label="Primary">
+          <a href="#product" class="transition hover:text-leaf-700" data-smooth>Product</a>
+          <a href="#journey" class="transition hover:text-leaf-700" data-smooth>Journey</a>
+          <a href="#platform" class="transition hover:text-leaf-700" data-smooth>Platform</a>
+          <a href="#contact" class="transition hover:text-leaf-700" data-smooth>Contact</a>
+        </nav>
+        <div class="flex items-center gap-3">
+          <a
+            href="#contact"
+            data-smooth
+            class="rounded-full bg-leaf-600 px-4 py-2 text-sm font-semibold text-white shadow-card transition hover:bg-leaf-700 hover:shadow-soft"
+            >Get in touch</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Hero -->
+      <section id="hero" class="relative min-h-[100svh] overflow-hidden pt-16">
+        <div class="absolute inset-0">
+          <video
+            class="motion-hide-if-reduced h-full w-full object-cover opacity-90"
+            autoplay
+            muted
+            loop
+            playsinline
+            poster="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80"
+            aria-label="Grocery shopping atmosphere video"
+          >
+            <source
+              src="https://assets.mixkit.co/videos/preview/mixkit-woman-bags-groceries-at-the-supermarket-4827-large.mp4"
+              type="video/mp4"
+            />
+          </video>
+          <div class="absolute inset-0 bg-gradient-to-br from-cream-50/92 via-cream-50/78 to-leaf-900/55"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-citrus-500/18 via-transparent to-transparent"></div>
+        </div>
+
+        <div class="relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-6xl flex-col justify-center px-4 pb-24 pt-12 sm:px-6 lg:px-8 lg:pb-32">
+          <p
+            class="reveal mb-4 inline-flex max-w-max items-center gap-2 rounded-full border border-leaf-200/80 bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-leaf-800 shadow-sm backdrop-blur"
+          >
+            <span class="h-2 w-2 animate-pulse rounded-full bg-citrus-500"></span>
+            Hyperlocal marketplace
+          </p>
+          <h1 class="reveal font-display text-4xl font-bold leading-tight tracking-tight text-ink sm:text-5xl lg:text-6xl text-balance">
+            Fresh orders from
+            <span class="bg-gradient-to-r from-leaf-600 to-leaf-500 bg-clip-text text-transparent">stores you trust</span>
+            — in your neighborhood.
+          </h1>
+          <p class="reveal mt-6 max-w-2xl text-lg text-ink/75 sm:text-xl">
+            LocalGrocery helps local retailers compete online while customers enjoy quick delivery, clear tracking, and familiar neighborhood quality—backed
+            by a secure, modern platform.
+          </p>
+          <div class="reveal mt-10 flex flex-wrap items-center gap-4">
+            <a
+              id="hero-cta-primary"
+              href="#contact"
+              data-smooth
+              class="inline-flex items-center justify-center rounded-full bg-leaf-600 px-8 py-3.5 text-base font-semibold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-leaf-700"
+              >Talk to us</a
+            >
+            <a
+              href="#product"
+              data-smooth
+              class="inline-flex items-center gap-2 text-base font-semibold text-leaf-800 underline-offset-4 hover:underline"
+              >See the experience
+              <span aria-hidden="true">↓</span></a
+            >
+          </div>
+          <dl class="reveal mt-16 grid max-w-3xl grid-cols-2 gap-6 sm:grid-cols-3">
+            <div class="rounded-2xl border border-leaf-100 bg-white/75 p-4 shadow-card backdrop-blur">
+              <dt class="text-sm text-ink/55">Built for</dt>
+              <dd class="mt-1 font-display text-lg font-semibold text-ink">Tier 2 &amp; 3 cities</dd>
+            </div>
+            <div class="rounded-2xl border border-leaf-100 bg-white/75 p-4 shadow-card backdrop-blur">
+              <dt class="text-sm text-ink/55">Three apps</dt>
+              <dd class="mt-1 font-display text-lg font-semibold text-ink">Customer • Store • Partner</dd>
+            </div>
+            <div class="col-span-2 rounded-2xl border border-leaf-100 bg-white/75 p-4 shadow-card backdrop-blur sm:col-span-1">
+              <dt class="text-sm text-ink/55">Focus</dt>
+              <dd class="mt-1 font-display text-lg font-semibold text-ink">Neighborhood-first</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- Problem / opportunity -->
+      <section id="why" class="relative border-t border-leaf-100 bg-cream-100 py-24">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal max-w-2xl">
+            <h2 class="font-display text-3xl font-bold text-ink sm:text-4xl text-balance">Why neighborhoods need a better bridge</h2>
+            <p class="mt-4 text-lg text-ink/70">
+              Shoppers want speed and transparency. Store owners need fair, simple tools. Delivery partners need clarity. Most platforms optimize for only one of
+              those—but every great delivery day depends on all three.
+            </p>
+          </div>
+          <div class="mt-14 grid gap-8 md:grid-cols-3">
+            <article class="reveal group overflow-hidden rounded-3xl border border-leaf-100 bg-white shadow-card">
+              <img
+                src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=900&q=80"
+                alt="Fresh vegetables at a market stall"
+                width="900"
+                height="600"
+                loading="lazy"
+                class="h-48 w-full object-cover transition duration-500 group-hover:scale-105"
+              />
+              <div class="p-6">
+                <h3 class="font-display text-xl font-semibold text-ink">Trust &amp; freshness</h3>
+                <p class="mt-2 text-ink/70">Customers stay loyal when quality and substitutions are handled with care—not surprises at the door.</p>
+              </div>
+            </article>
+            <article class="reveal group overflow-hidden rounded-3xl border border-leaf-100 bg-white shadow-card">
+              <img
+                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80"
+                alt="Store checkout experience"
+                width="900"
+                height="600"
+                loading="lazy"
+                class="h-48 w-full object-cover transition duration-500 group-hover:scale-105"
+              />
+              <div class="p-6">
+                <h3 class="font-display text-xl font-semibold text-ink">Stores stay in control</h3>
+                <p class="mt-2 text-ink/70">Catalog, inventory, and payouts should strengthen local retailers—not replace their identity.</p>
+              </div>
+            </article>
+            <article class="reveal group overflow-hidden rounded-3xl border border-leaf-100 bg-white shadow-card">
+              <img
+                src="https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?auto=format&fit=crop&w=900&q=80"
+                alt="Delivery scooter in urban setting"
+                width="900"
+                height="600"
+                loading="lazy"
+                class="h-48 w-full object-cover transition duration-500 group-hover:scale-105"
+              />
+              <div class="p-6">
+                <h3 class="font-display text-xl font-semibold text-ink">Delivery that feels fair</h3>
+                <p class="mt-2 text-ink/70">Clear assignments, fair payouts, and live updates help partners deliver with confidence.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Personas -->
+      <section id="product" class="py-24">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 class="font-display text-3xl font-bold text-ink sm:text-4xl">One platform, three experiences</h2>
+              <p class="mt-3 max-w-2xl text-lg text-ink/70">Each app is tailored to real jobs—so everyone spends less time fighting the software.</p>
+            </div>
+          </div>
+
+          <div class="mt-12 grid gap-8 lg:grid-cols-2 lg:items-start">
+            <div class="reveal flex flex-wrap gap-2 rounded-2xl border border-leaf-100 bg-cream-100/80 p-2" role="tablist" aria-label="Audience">
+              <button
+                type="button"
+                role="tab"
+                aria-selected="true"
+                data-persona-tab="customer"
+                class="persona-tab rounded-xl px-4 py-2.5 text-sm font-semibold text-ink/70 transition data-[active=true]:bg-white data-[active=true]:text-leaf-800 data-[active=true]:shadow-card"
+                data-active="true"
+              >
+                Customers
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected="false"
+                data-persona-tab="retailer"
+                class="persona-tab rounded-xl px-4 py-2.5 text-sm font-semibold text-ink/70 transition data-[active=true]:bg-white data-[active=true]:text-leaf-800 data-[active=true]:shadow-card"
+              >
+                Store owners
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected="false"
+                data-persona-tab="delivery"
+                class="persona-tab rounded-xl px-4 py-2.5 text-sm font-semibold text-ink/70 transition data-[active=true]:bg-white data-[active=true]:text-leaf-800 data-[active=true]:shadow-card"
+              >
+                Delivery partners
+              </button>
+            </div>
+
+            <div class="relative min-h-[280px] lg:min-h-[360px]">
+              <article
+                id="persona-customer"
+                data-persona-panel="customer"
+                class="persona-panel absolute inset-0 grid gap-8 rounded-3xl border border-leaf-100 bg-white p-6 shadow-card lg:grid-cols-2 lg:p-10"
+              >
+                <div>
+                  <h3 class="font-display text-2xl font-semibold text-ink">Shop nearby with confidence</h3>
+                  <ul class="mt-6 space-y-3 text-ink/75">
+                    <li class="flex gap-3">
+                      <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-citrus-500"></span>
+                      Browse trusted stores around you, with simple search and clear availability.
+                    </li>
+                    <li class="flex gap-3">
+                      <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-citrus-500"></span>
+                      Track your order in plain language—from preparation to the final handoff.
+                    </li>
+                    <li class="flex gap-3">
+                      <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-citrus-500"></span>
+                      Pay securely with familiar options you already use every day.
+                    </li>
+                  </ul>
+                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1485908950220-5293e9d76cd8?auto=format&fit=crop&w=900&q=80"
+                  alt="Customer holding shopping bags outdoors"
+                  width="900"
+                  height="700"
+                  loading="lazy"
+                  class="max-h-72 w-full rounded-2xl object-cover shadow-soft lg:max-h-none"
+                />
+              </article>
+
+              <article
+                id="persona-retailer"
+                data-persona-panel="retailer"
+                class="persona-panel absolute inset-0 hidden grid gap-8 rounded-3xl border border-leaf-100 bg-white p-6 shadow-card lg:grid-cols-2 lg:p-10"
+                hidden
+              >
+                <div>
+                  <h3 class="font-display text-2xl font-semibold text-ink">Sell online without losing your store’s soul</h3>
+                  <ul class="mt-6 space-y-3 text-ink/75">
+                    <li class="flex gap-3">
+                      <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                      Keep stock accurate with tooling built for busy counters and backrooms.
+                    </li>
+                    <li class="flex gap-3">
+                      <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                      Onboard compliantly with guided checks—so you can focus on customers, not paperwork.
+                    </li>
+                    <li class="flex gap-3">
+                      <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                      Understand demand with friendly insights rather than cryptic dashboards.
+                    </li>
+                  </ul>
+                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=900&q=80"
+                  alt="Fresh produce display at a local store"
+                  width="900"
+                  height="700"
+                  loading="lazy"
+                  class="max-h-72 w-full rounded-2xl object-cover shadow-soft lg:max-h-none"
+                />
+              </article>
+
+              <article
+                id="persona-delivery"
+                data-persona-panel="delivery"
+                class="persona-panel absolute inset-0 hidden grid gap-8 rounded-3xl border border-leaf-100 bg-white p-6 shadow-card lg:grid-cols-2 lg:p-10"
+                hidden
+              >
+                <div>
+                  <h3 class="font-display text-2xl font-semibold text-ink">Deliver with clarity, mile after mile</h3>
+                  <ul class="mt-6 space-y-3 text-ink/75">
+                    <li class="flex gap-3">
+                      <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-citrus-500"></span>
+                      Accept assignments with transparent routes and realistic ETAs.
+                    </li>
+                    <li class="flex gap-3">
+                      <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-citrus-500"></span>
+                      Update customers and stores in real time, reducing calls and confusion.
+                    </li>
+                    <li class="flex gap-3">
+                      <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-citrus-500"></span>
+                      Earnings visibility that respects your time on the road.
+                    </li>
+                  </ul>
+                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1526367704774-0e04bb4e17e5?auto=format&fit=crop&w=900&q=80"
+                  alt="Delivery bicycle ready for dispatch"
+                  width="900"
+                  height="700"
+                  loading="lazy"
+                  class="max-h-72 w-full rounded-2xl object-cover shadow-soft lg:max-h-none"
+                />
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features bento -->
+      <section id="features" class="border-t border-leaf-100 bg-gradient-to-b from-cream-50 to-cream-100 py-24">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal max-w-2xl">
+            <h2 class="font-display text-3xl font-bold text-ink sm:text-4xl">Capabilities your customers can feel</h2>
+            <p class="mt-3 text-lg text-ink/70">Under the hood it’s a modern platform; on the surface it’s simple stories: find, buy, fulfill, delight.</p>
+          </div>
+          <div class="mt-14 grid gap-5 md:grid-cols-6 md:grid-rows-2">
+            <div
+              class="reveal bento-card group relative overflow-hidden rounded-3xl border border-leaf-100 bg-white shadow-card md:col-span-4 md:row-span-2"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1506368083636-6defb67639a8?auto=format&fit=crop&w=1200&q=80"
+                alt="Colorful fresh fruit pile"
+                width="1200"
+                height="850"
+                loading="lazy"
+                class="h-52 w-full object-cover transition duration-700 group-hover:scale-[1.03] md:h-64"
+              />
+              <div class="p-8 md:absolute md:bottom-0 md:left-0 md:right-0 md:bg-gradient-to-t md:from-white md:via-white/95 md:to-transparent md:p-8">
+                <h3 class="font-display text-2xl font-semibold text-ink">Multi‑store marketplace</h3>
+                <p class="mt-2 max-w-xl text-ink/70">
+                  One familiar app for many trusted shops—so customers compare the right things: proximity, offers, and availability—not a confusing maze of
+                  disconnected lists.
+                </p>
+              </div>
+            </div>
+            <div class="reveal bento-card rounded-3xl border border-leaf-100 bg-leaf-600 p-6 text-white shadow-soft md:col-span-2">
+              <h3 class="font-display text-lg font-semibold">Live order status</h3>
+              <p class="mt-2 text-sm text-white/90">Fewer “where is my order?” moments—clear checkpoints from payment to doorstep.</p>
+            </div>
+            <div class="reveal bento-card rounded-3xl border border-leaf-100 bg-white p-6 shadow-card md:col-span-2">
+              <h3 class="font-display text-lg font-semibold text-ink">Payments people already trust</h3>
+              <p class="mt-2 text-sm text-ink/70">Cards, UPI, wallets—handled through established providers with strong consumer protections.</p>
+            </div>
+            <div
+              class="reveal bento-card overflow-hidden rounded-3xl border border-leaf-100 bg-white shadow-card md:col-span-3"
+            >
+              <div class="grid gap-0 md:grid-cols-2">
+                <img
+                  src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&q=80"
+                  alt="Headphones and phone — notifications vibe"
+                  width="800"
+                  height="600"
+                  loading="lazy"
+                  class="h-44 w-full object-cover md:h-full"
+                />
+                <div class="p-6">
+                  <h3 class="font-display text-lg font-semibold text-ink">Helpful notifications</h3>
+                  <p class="mt-2 text-sm text-ink/70">Timely SMS and push nudges—so everyone stays aligned without noise.</p>
+                </div>
+              </div>
+            </div>
+            <div class="reveal bento-card rounded-3xl border border-leaf-100 bg-cream-100 p-6 shadow-card md:col-span-3">
+              <h3 class="font-display text-lg font-semibold text-ink">Maps &amp; routing built for real streets</h3>
+              <p class="mt-2 text-sm text-ink/70">Turn-by-turn realities—not idealized straight lines—so ETAs match how cities actually move.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Order journey timeline -->
+      <section id="journey" class="relative py-24">
+        <div class="pointer-events-none absolute inset-x-0 top-24 h-64 bg-[radial-gradient(circle_at_20%_50%,rgba(54,135,96,0.12),transparent_55%)]"></div>
+        <div class="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal max-w-2xl">
+            <h2 class="font-display text-3xl font-bold text-ink sm:text-4xl">From cart to doorstep—one smooth story</h2>
+            <p class="mt-3 text-lg text-ink/70">Scroll to reveal how a typical LocalGrocery order comes to life.</p>
+          </div>
+          <div class="relative mt-16 md:pl-8">
+            <div
+              id="journey-line"
+              class="absolute left-[1.125rem] top-3 hidden h-[calc(100%-1.5rem)] w-0.5 bg-gradient-to-b from-leaf-300 via-leaf-500 to-citrus-400 md:block"
+              aria-hidden="true"
+            ></div>
+            <ol class="space-y-14">
+              <li class="journey-step relative flex flex-col gap-4 md:flex-row md:items-start md:gap-10">
+                <div class="journey-copy flex items-start gap-4 md:w-2/5">
+                  <span
+                    class="z-[1] flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-leaf-800 ring-4 ring-leaf-100"
+                    >1</span
+                  >
+                  <div>
+                    <h3 class="font-display text-xl font-semibold text-ink">Browse &amp; discover nearby</h3>
+                    <p class="mt-2 text-ink/70">Customers explore stores they recognize—and find what’s in stock right now.</p>
+                  </div>
+                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1588964887859-7546e71922b8?auto=format&fit=crop&w=800&q=80"
+                  alt="Shopping list and fresh items"
+                  width="800"
+                  height="520"
+                  loading="lazy"
+                  class="w-full max-w-xl rounded-2xl object-cover shadow-card md:mt-0"
+                />
+              </li>
+              <li class="journey-step relative flex flex-col gap-4 md:flex-row md:items-start md:gap-10">
+                <div class="journey-copy flex items-start gap-4 md:w-2/5">
+                  <span class="z-[1] flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-leaf-800 ring-4 ring-leaf-100"
+                    >2</span
+                  >
+                  <div>
+                    <h3 class="font-display text-xl font-semibold text-ink">Cart &amp; secure checkout</h3>
+                    <p class="mt-2 text-ink/70">A calm checkout with familiar payment choices—no guesswork at the last step.</p>
+                  </div>
+                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1556740752-90d374b4b6c7?auto=format&fit=crop&w=800&q=80"
+                  alt="Tap to pay with phone"
+                  width="800"
+                  height="520"
+                  loading="lazy"
+                  class="w-full max-w-xl rounded-2xl object-cover shadow-card"
+                />
+              </li>
+              <li class="journey-step relative flex flex-col gap-4 md:flex-row md:items-start md:gap-10">
+                <div class="journey-copy flex items-start gap-4 md:w-2/5">
+                  <span class="z-[1] flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-leaf-800 ring-4 ring-leaf-100"
+                    >3</span
+                  >
+                  <div>
+                    <h3 class="font-display text-xl font-semibold text-ink">Store prepares with precision</h3>
+                    <p class="mt-2 text-ink/70">Inventory discipline means fewer cancellations—and happier first-time buyers.</p>
+                  </div>
+                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1610832958506-aa56368143cf?auto=format&fit=crop&w=800&q=80"
+                  alt="Greenery and herbs on a kitchen board"
+                  width="800"
+                  height="520"
+                  loading="lazy"
+                  class="w-full max-w-xl rounded-2xl object-cover shadow-card"
+                />
+              </li>
+              <li class="journey-step relative flex flex-col gap-4 md:flex-row md:items-start md:gap-10">
+                <div class="journey-copy flex items-start gap-4 md:w-2/5">
+                  <span class="z-[1] flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-leaf-800 ring-4 ring-leaf-100"
+                    >4</span
+                  >
+                  <div>
+                    <h3 class="font-display text-xl font-semibold text-ink">Partner pickup &amp; live tracking</h3>
+                    <p class="mt-2 text-ink/70">Handoffs are visible—customers relax, stores answer fewer calls.</p>
+                  </div>
+                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1525160354320-6b91875a3127?auto=format&fit=crop&w=800&q=80"
+                  alt="Motorbike in motion — delivery metaphor"
+                  width="800"
+                  height="520"
+                  loading="lazy"
+                  class="w-full max-w-xl rounded-2xl object-cover shadow-card"
+                />
+              </li>
+              <li class="journey-step relative flex flex-col gap-4 md:flex-row md:items-start md:gap-10">
+                <div class="journey-copy flex items-start gap-4 md:w-2/5">
+                  <span class="z-[1] flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-leaf-800 ring-4 ring-leaf-100"
+                    >5</span
+                  >
+                  <div>
+                    <h3 class="font-display text-xl font-semibold text-ink">Delivered—with room to grow loyalty</h3>
+                    <p class="mt-2 text-ink/70">A great last mile is a reason to shop locally again next week.</p>
+                  </div>
+                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1543362906-acde47e7ca7a?auto=format&fit=crop&w=800&q=80"
+                  alt="Happy family cooking together"
+                  width="800"
+                  height="520"
+                  loading="lazy"
+                  class="w-full max-w-xl rounded-2xl object-cover shadow-card"
+                />
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- Architecture -->
+      <section id="platform" class="border-t border-leaf-100 bg-cream-100 py-24">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal max-w-2xl">
+            <h2 class="font-display text-3xl font-bold text-ink sm:text-4xl">A secure backbone—without the jargon</h2>
+            <p class="mt-3 text-lg text-ink/70">
+              Your community sees friendly apps; behind them is a protected entry point, coordinated services, and trusted partners for payments, maps, and
+              messages—built to stay reliable as you grow.
+            </p>
+          </div>
+
+          <div
+            id="arch-wrap"
+            class="reveal relative mt-12 overflow-hidden rounded-3xl border border-leaf-100 bg-white p-6 shadow-soft sm:p-10"
+          >
+            <div class="mb-6 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-ink/50" id="arch-chapters">
+              <span data-chapter class="rounded-full bg-leaf-100 px-3 py-1 text-leaf-900 opacity-40">Request</span>
+              <span data-chapter class="rounded-full bg-leaf-100 px-3 py-1 text-leaf-900 opacity-40">Protect</span>
+              <span data-chapter class="rounded-full bg-leaf-100 px-3 py-1 text-leaf-900 opacity-40">Coordinate</span>
+              <span data-chapter class="rounded-full bg-leaf-100 px-3 py-1 text-leaf-900 opacity-40">Partner services</span>
+            </div>
+
+            <div class="relative w-full overflow-x-auto">
+              <svg
+                id="arch-diagram"
+                class="mx-auto min-w-[640px] max-w-full"
+                viewBox="0 0 920 440"
+                role="img"
+                aria-labelledby="arch-title"
+              >
+                <title id="arch-title">High-level LocalGrocery platform diagram</title>
+                <defs>
+                  <linearGradient id="arch-line" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#8ac7a8" />
+                    <stop offset="100%" stop-color="#368760" />
+                  </linearGradient>
+                  <filter id="arch-soft" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#16382d" flood-opacity="0.12" />
+                  </filter>
+                </defs>
+
+                <!-- paths: apps -> gateway -->
+                <path
+                  id="path-c-gw"
+                  class="arch-path arch-path-a"
+                  d="M 132 98 C 210 98 240 155 304 182"
+                  fill="none"
+                  stroke="url(#arch-line)"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+                <path
+                  id="path-r-gw"
+                  class="arch-path arch-path-a"
+                  d="M 132 220 H 250 C 278 220 292 206 304 198"
+                  fill="none"
+                  stroke="url(#arch-line)"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+                <path
+                  id="path-d-gw"
+                  class="arch-path arch-path-a"
+                  d="M 132 342 C 210 342 248 278 304 214"
+                  fill="none"
+                  stroke="url(#arch-line)"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+
+                <!-- gateway -> core -->
+                <path
+                  id="path-gw-core"
+                  class="arch-path arch-path-b"
+                  d="M 392 198 H 470"
+                  fill="none"
+                  stroke="url(#arch-line)"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+
+                <!-- core -> partners -->
+                <path
+                  id="path-core-pay"
+                  class="arch-path arch-path-c"
+                  d="M 710 198 C 734 198 748 132 756 118"
+                  fill="none"
+                  stroke="#58a67d"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+                <path
+                  id="path-core-map"
+                  class="arch-path arch-path-c"
+                  d="M 710 198 H 756"
+                  fill="none"
+                  stroke="#58a67d"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+                <path
+                  id="path-core-msg"
+                  class="arch-path arch-path-c"
+                  d="M 710 198 C 734 198 746 278 756 291"
+                  fill="none"
+                  stroke="#58a67d"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+
+                <!-- Apps -->
+                <g filter="url(#arch-soft)">
+                  <rect x="40" y="64" width="160" height="68" rx="16" fill="#ffffff" stroke="#b9dfca" stroke-width="1.5" />
+                  <text x="120" y="98" text-anchor="middle" fill="#1b1f1c" font-family="Sora, system-ui, sans-serif" font-size="13" font-weight="600">Customer app</text>
+                  <text x="120" y="118" text-anchor="middle" fill="rgba(27,31,28,0.55)" style="font-size: 11px">Browse • Pay • Track</text>
+
+                  <rect x="40" y="186" width="160" height="68" rx="16" fill="#ffffff" stroke="#b9dfca" stroke-width="1.5" />
+                  <text x="120" y="220" text-anchor="middle" fill="#1b1f1c" font-family="Sora, system-ui, sans-serif" font-size="13" font-weight="600">Store app</text>
+                  <text x="120" y="240" text-anchor="middle" fill="rgba(27,31,28,0.55)" style="font-size: 11px">Catalog • Orders</text>
+
+                  <rect x="40" y="308" width="160" height="68" rx="16" fill="#ffffff" stroke="#b9dfca" stroke-width="1.5" />
+                  <text x="120" y="342" text-anchor="middle" fill="#1b1f1c" font-family="Sora, system-ui, sans-serif" font-size="13" font-weight="600">Delivery app</text>
+                  <text x="120" y="362" text-anchor="middle" fill="rgba(27,31,28,0.55)" style="font-size: 11px">Accept • Navigate</text>
+
+                  <rect x="304" y="164" width="88" height="72" rx="18" fill="#27684d" stroke="#1f5640" stroke-width="1.5" />
+                  <text x="348" y="198" text-anchor="middle" fill="#ffffff" font-family="Sora, system-ui, sans-serif" font-size="12" font-weight="600">Protected entry</text>
+                  <text x="348" y="218" text-anchor="middle" fill="rgba(255,255,255,0.88)" style="font-size: 10px">Routes • Safety</text>
+
+                  <rect x="472" y="148" width="238" height="104" rx="22" fill="#f2f9f4" stroke="#8ac7a8" stroke-width="1.5" />
+                  <text x="591" y="188" text-anchor="middle" fill="#1b1f1c" font-family="Sora, system-ui, sans-serif" font-size="15" font-weight="600">Platform core</text>
+                  <text x="591" y="212" text-anchor="middle" fill="rgba(27,31,28,0.68)" style="font-size: 11px">Orders • Inventory • Profiles</text>
+                  <text x="591" y="232" text-anchor="middle" fill="rgba(27,31,28,0.52)" style="font-size: 10px">Reliable at neighborhood scale</text>
+
+                  <rect x="756" y="78" width="148" height="78" rx="16" fill="#ffffff" stroke="#e8d4b3" stroke-width="1.5" />
+                  <text x="830" y="114" text-anchor="middle" fill="#1b1f1c" font-family="Sora, system-ui, sans-serif" font-size="13" font-weight="600">Payments</text>
+                  <text x="830" y="136" text-anchor="middle" fill="rgba(27,31,28,0.55)" style="font-size: 10px">Trusted providers</text>
+
+                  <rect x="756" y="168" width="148" height="72" rx="16" fill="#ffffff" stroke="#e8d4b3" stroke-width="1.5" />
+                  <text x="830" y="200" text-anchor="middle" fill="#1b1f1c" font-family="Sora, system-ui, sans-serif" font-size="13" font-weight="600">Maps &amp; routing</text>
+                  <text x="830" y="220" text-anchor="middle" fill="rgba(27,31,28,0.55)" style="font-size: 10px">Directions • ETA</text>
+
+                  <rect x="756" y="252" width="148" height="78" rx="16" fill="#ffffff" stroke="#e8d4b3" stroke-width="1.5" />
+                  <text x="830" y="288" text-anchor="middle" fill="#1b1f1c" font-family="Sora, system-ui, sans-serif" font-size="13" font-weight="600">Messages</text>
+                  <text x="830" y="310" text-anchor="middle" fill="rgba(27,31,28,0.55)" style="font-size: 10px">SMS • Push</text>
+                </g>
+
+                <!-- GSAP moves these along paths -->
+                <circle id="arch-dot-a" r="6" fill="#ea9a1a" opacity="0" />
+                <circle id="arch-dot-b" r="5" fill="#f5b83c" opacity="0" />
+              </svg>
+            </div>
+
+            <p class="mt-6 text-center text-sm text-ink/55">
+              Illustrative only—visitors use simple screens while the platform quietly coordinates every handoff.
+            </p>
+          </div>
+
+          <div class="reveal mt-20 grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div>
+              <h3 class="font-display text-2xl font-bold text-ink sm:text-3xl">Neighborhood-first—not megacity-only</h3>
+              <p class="mt-4 text-lg text-ink/70">
+                Many apps optimize for dense metros alone. LocalGrocery is intentionally framed around familiar stores, practical payouts, and regional buying
+                habits—so communities outside headline cities get modern convenience without losing what makes them local.
+              </p>
+              <ul class="mt-8 space-y-4 text-ink/75">
+                <li class="flex gap-3">
+                  <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                  Store brands stay visible; shoppers know who fulfilled their order.
+                </li>
+                <li class="flex gap-3">
+                  <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                  Operations remain accountable—status, notifications, and support align across all three apps.
+                </li>
+                <li class="flex gap-3">
+                  <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-leaf-500"></span>
+                  Flexible delivery models can adapt to your city’s realities, from lanes to last-mile norms.
+                </li>
+              </ul>
+            </div>
+            <div class="relative overflow-hidden rounded-3xl border border-leaf-100 bg-white shadow-soft">
+              <img
+                src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?auto=format&fit=crop&w=1000&q=80"
+                alt="Neighborhood homes at dusk"
+                width="1000"
+                height="750"
+                loading="lazy"
+                class="h-full max-h-[420px] w-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-leaf-900/70 via-transparent to-transparent"></div>
+              <p class="absolute bottom-6 left-6 right-6 font-display text-lg font-semibold text-white drop-shadow-md">
+                Built to scale carefully—so reliability comes before buzzwords.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trust -->
+      <section id="trust" class="border-t border-leaf-100 py-20">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div class="reveal rounded-3xl border border-leaf-100 bg-gradient-to-br from-leaf-700 to-leaf-900 p-10 text-white shadow-soft sm:p-14">
+            <h2 class="font-display text-2xl font-bold sm:text-3xl">Security &amp; trust, in human terms</h2>
+            <p class="mt-4 max-w-3xl text-white/85">
+              Traffic is encrypted in transit. The platform’s protected entry helps block abusive traffic. Payments run through regulated providers you already
+              recognize—so sensitive money movement stays in expert hands, not buried in fine print.
+            </p>
+            <div class="mt-10 grid gap-6 sm:grid-cols-3">
+              <div class="rounded-2xl bg-white/10 p-5 backdrop-blur">
+                <p class="font-display font-semibold">Privacy-aware by design</p>
+                <p class="mt-2 text-sm text-white/80">Collect what serves the experience; explain it plainly to users.</p>
+              </div>
+              <div class="rounded-2xl bg-white/10 p-5 backdrop-blur">
+                <p class="font-display font-semibold">Always-on resilience mindset</p>
+                <p class="mt-2 text-sm text-white/80">Architecture choices favor graceful recovery as you grow.</p>
+              </div>
+              <div class="rounded-2xl bg-white/10 p-5 backdrop-blur">
+                <p class="font-display font-semibold">Transparent handoffs</p>
+                <p class="mt-2 text-sm text-white/80">Everyone sees the same story at each step—from kitchen to doorstep.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section id="contact" class="relative overflow-hidden pb-28 pt-8">
+        <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(245,184,60,0.2),transparent_45%)]"></div>
+        <div class="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div
+            class="reveal relative overflow-hidden rounded-[2rem] border border-leaf-100 bg-white p-10 shadow-soft sm:p-14 lg:flex lg:items-center lg:justify-between lg:gap-12"
+          >
+            <div class="max-w-xl">
+              <h2 class="font-display text-3xl font-bold text-ink sm:text-4xl">Bring LocalGrocery to your city</h2>
+              <p class="mt-4 text-lg text-ink/70">
+                Whether you operate stores, run logistics, or champion smarter commerce—say hello. We’ll walk through the product story and explore fit without
+                expecting engineering jargon.
+              </p>
+              <p class="mt-3 text-sm text-ink/50">Update the email in <code class="rounded bg-cream-200 px-1.5 py-0.5 text-xs">website/src/site-config.ts</code> before launch.</p>
+            </div>
+            <div class="mt-10 flex w-full flex-col gap-4 sm:flex-row lg:mt-0 lg:w-auto lg:flex-col">
+              <a
+                id="cta-mailto"
+                href="mailto:ravindrakumarch@outlook.com"
+                class="inline-flex items-center justify-center rounded-full bg-leaf-600 px-6 py-3.5 text-center text-base font-semibold text-white shadow-card transition hover:-translate-y-0.5 hover:bg-leaf-700"
+                >Email us</a
+              >
+              <a
+                id="cta-github"
+                href="https://github.com/"
+                target="_blank"
+                rel="noreferrer"
+                class="inline-flex items-center justify-center rounded-full border border-leaf-200 bg-cream-50 px-6 py-3.5 text-center text-base font-semibold text-leaf-900 transition hover:border-leaf-400"
+                >View on GitHub</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-leaf-100 bg-cream-100 py-12">
+      <div class="mx-auto flex max-w-6xl flex-col gap-6 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div class="flex items-center gap-2">
+          <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-leaf-600 text-sm font-bold text-white font-display">LG</span>
+          <span class="font-display font-semibold text-ink">LocalGrocery</span>
+          <span class="text-sm text-ink/50">© <span id="y"></span></span>
+        </div>
+        <p class="max-w-md text-sm text-ink/55">
+          Media credits: see <a class="font-medium text-leaf-700 underline-offset-2 hover:underline" href="./media/ATTRIBUTION.md">media/ATTRIBUTION.md</a>.
+        </p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

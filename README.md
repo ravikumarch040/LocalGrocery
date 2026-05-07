@@ -241,6 +241,7 @@ Track implementation progress in [IMPLEMENTATION_CHECKLIST.md](.github/IMPLEMENT
 
 ## 📖 Documentation
 
+- [Product marketing site (GitHub Pages)](website/) — static landing in `website/`; enable **Settings → Pages → GitHub Actions**, then open `https://<your-github-user-or-org>.github.io/<repository-name>/` after the deploy workflow succeeds.
 - [Architecture Overview](wiki/Design_and_Architecture.md)
 - [Database Schema](wiki/Database_Schema.md)
 - [API Contracts](backend/openapi.yaml)
